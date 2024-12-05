@@ -3,9 +3,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Servlet implementation class LoginServ
+ * Servlet implementation class LoginServlet
  */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -25,27 +26,30 @@ public class LoginServlet extends HttpServlet {
      * Default constructor.
      */
     public LoginServlet() {
-        // Default constructor
+        // Default constructor stub
     }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+          throws ServletException, IOException {
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+          throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
+
+        JsonObject jsonResponse = new JsonObject();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
-        JsonObject jsonResponse;
 
         try {
             Connection conn = DBConnection.getConnection();
@@ -58,42 +62,35 @@ public class LoginServlet extends HttpServlet {
                 String storedPassword = rs.getString("password");
                 int userID = rs.getInt("user_id");
 
-                if (storedPassword.equals(password)) { // Success
-                    jsonResponse = Json.createObjectBuilder()
-                            .add("status", "success")
-                            .add("userID", userID)
-                            .add("username", username)
-                            .build();
-                } else { // Incorrect password
-                    jsonResponse = Json.createObjectBuilder()
-                            .add("status", "error")
-                            .add("message", "Incorrect username or password.")
-                            .build();
+                if (storedPassword.equals(password)) {
+                    // Successful login
+                    jsonResponse.addProperty("status", "success");
+                    jsonResponse.addProperty("userID", userID);
+                    jsonResponse.addProperty("username", username);
+                } else {
+                    // Incorrect password
+                    jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "Incorrect username or password.");
                 }
-            } else { // Incorrect username
-                jsonResponse = Json.createObjectBuilder()
-                        .add("status", "error")
-                        .add("message", "Incorrect username or password.")
-                        .build();
+            } else {
+                // Incorrect username
+                jsonResponse.addProperty("status", "error");
+                jsonResponse.addProperty("message", "Incorrect username or password.");
             }
 
             rs.close();
             ps.close();
             conn.close();
         } catch (ClassNotFoundException e) {
-            jsonResponse = Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Database driver not found.")
-                    .build();
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "Database driver not found.");
             e.printStackTrace();
         } catch (SQLException e) {
-            jsonResponse = Json.createObjectBuilder()
-                    .add("status", "error")
-                    .add("message", "Database error.")
-                    .build();
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "Database error.");
             e.printStackTrace();
         }
 
-        out.print(jsonResponse);
+        out.print(gson.toJson(jsonResponse));
     }
 }
