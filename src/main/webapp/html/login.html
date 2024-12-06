@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>Create Your Account</h1>
+        <h1>Login to Your Account</h1>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -20,22 +21,17 @@
         </nav>
     </header>
     <main>
-        <form id="register-form" method="post" action="RegisterServlet">
+        <form id="login-form" onsubmit="return validateForm();">
+
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
             
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             
-            <label for="confirm-password">Confirm Password:</label>
-            <input type="password" id="confirm-password" name="confirmPassword" required>
-            
-            <button type="submit">Register</button>
+            <button type="submit">Login</button>
         </form>
-        <p>Already have an account? <a href="login.html">Login</a></p>
+        <p>Don't have an account? <a href="register.html">Sign Up</a></p>
     </main>
     <footer>
         <p>&copy; 2024 USC Course Marketplace</p>

@@ -1,0 +1,115 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+
+@WebServlet("/AccountServlet")
+public class AccountServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
+        JsonObject jsonResponse = new JsonObject();
+        
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+        
+        switch (action) {
+            case "checkLogin":
+                jsonResponse.addProperty("loggedIn", session != null && session.getAttribute("userID") != null);
+                break;
+                
+            case "getUserInfo":
+                if (session != null && session.getAttribute("userID") != null) {
+                    try {
+                        Connection conn = DBConnection.getConnection();
+                        String sql = "SELECT username, email FROM users WHERE userID = ?";
+                        PreparedStatement ps = conn.prepareStatement(sql);
+                        ps.setInt(1, (Integer) session.getAttribute("userID"));
+                        ResultSet rs = ps.executeQuery();
+                        
+                        if (rs.next()) {
+                            jsonResponse.addProperty("username", rs.getString("username"));
+                            jsonResponse.addProperty("email", rs.getString("email"));
+                        }
+                        
+                        rs.close();
+                        ps.close();
+                        conn.close();
+                    } catch (Exception e) {
+                        jsonResponse.addProperty("error", "Database error: " + e.getMessage());
+                    }
+                }
+                break;
+                
+            case "getEnrolledCourses":
+                if (session != null && session.getAttribute("userID") != null) {
+                    try {
+                        Connection conn = DBConnection.getConnection();
+                        String sql = "SELECT * FROM schedule WHERE userID = ?";
+                        PreparedStatement ps = conn.prepareStatement(sql);
+                        ps.setInt(1, (Integer) session.getAttribute("userID"));
+                        ResultSet rs = ps.executeQuery();
+                        
+                        JsonArray coursesArray = new JsonArray();
+                        while (rs.next()) {
+                            JsonObject course = new JsonObject();
+                            course.addProperty("courseCode", rs.getString("courseCode"));
+                            course.addProperty("professor", rs.getString("professor"));
+                            course.addProperty("stime", rs.getString("stime"));
+                            course.addProperty("contact", rs.getString("contact"));
+                            coursesArray.add(course);
+                        }
+                        
+                        jsonResponse.add("courses", coursesArray);
+                        
+                        rs.close();
+                        ps.close();
+                        conn.close();
+                    } catch (Exception e) {
+                        jsonResponse.addProperty("error", "Database error: " + e.getMessage());
+                    }
+                }
+                break;
+        }
+        
+        out.print(gson.toJson(jsonResponse));
+    }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+        
+        String action = request.getParameter("action");
+        
+        if ("signout".equals(action)) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            jsonResponse.addProperty("status", "success");
+        }
+        
+        out.print(new Gson().toJson(jsonResponse));
+    }
+}
