@@ -3,7 +3,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -15,31 +14,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Servlet implementation class LoginServlet
- */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor.
-     */
     public LoginServlet() {
-        // Default constructor stub
+        // Default constructor
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
         response.setContentType("application/json");
@@ -61,10 +48,11 @@ public class LoginServlet extends HttpServlet {
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
                 int userID = rs.getInt("user_id");
-
-                if (storedPassword.equals(password)) {
-                    // Successful login
+                
+                if (storedPassword.equals(password)) { 
+                    // Login success
                     jsonResponse.addProperty("status", "success");
+                    jsonResponse.addProperty("message", "Login successful.");
                     jsonResponse.addProperty("userID", userID);
                     jsonResponse.addProperty("username", username);
                 } else {
@@ -73,7 +61,7 @@ public class LoginServlet extends HttpServlet {
                     jsonResponse.addProperty("message", "Incorrect username or password.");
                 }
             } else {
-                // Incorrect username
+                // Username not found
                 jsonResponse.addProperty("status", "error");
                 jsonResponse.addProperty("message", "Incorrect username or password.");
             }

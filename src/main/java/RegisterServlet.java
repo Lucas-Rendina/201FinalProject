@@ -21,24 +21,15 @@ import java.sql.SQLException;
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor.
-     */
     public RegisterServlet() {
         // Default constructor
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
         response.setContentType("application/json");
@@ -46,6 +37,7 @@ public class RegisterServlet extends HttpServlet {
         Gson gson = new Gson();
 
         String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         JsonObject jsonResponse = new JsonObject();
@@ -73,10 +65,11 @@ public class RegisterServlet extends HttpServlet {
             ps.close();
 
             // Insert new user
-            String insertUserSql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            String insertUserSql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
             ps = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, email);
+            ps.setString(3, password);
 
             int rowsAffected = ps.executeUpdate();
 
