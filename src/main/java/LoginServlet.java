@@ -35,7 +35,6 @@ public class LoginServlet extends HttpServlet {
         // Basic validation
         if (username == null || username.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
-            
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Username and password are required.");
             out.print(gson.toJson(jsonResponse));
@@ -44,6 +43,7 @@ public class LoginServlet extends HttpServlet {
         
         try {
             Connection conn = DBConnection.getConnection();
+            System.out.println("Database connection successful");
             
             // Check user credentials
             String loginSql = "SELECT userID, username FROM users WHERE username = ? AND pw = ?";
@@ -98,10 +98,8 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("userID") != null) {
-            // User is already logged in, redirect to marketplace
             response.sendRedirect("marketplace.html");
         } else {
-            // User is not logged in, redirect to login page
             response.sendRedirect("login.html");
         }
     }
