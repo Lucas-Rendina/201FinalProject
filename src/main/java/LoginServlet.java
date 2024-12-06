@@ -1,96 +1,108 @@
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-/**
- * Servlet implementation class LoginServlet
- */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Default constructor.
-     */
+    
     public LoginServlet() {
-        // Default constructor stub
+        super();
     }
-
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-          throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-          throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
-
         JsonObject jsonResponse = new JsonObject();
-
+        
+        // Get parameters from request
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+        
+        // Basic validation
+        if (username == null || username.trim().isEmpty() ||
+            password == null || password.trim().isEmpty()) {
+            
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "Username and password are required.");
+            out.print(gson.toJson(jsonResponse));
+            return;
+        }
+        
         try {
             Connection conn = DBConnection.getConnection();
-            String checkUserSql = "SELECT user_id, password FROM users WHERE username = ?";
-            PreparedStatement ps = conn.prepareStatement(checkUserSql);
+            
+            // Check user credentials
+            String loginSql = "SELECT userID, username FROM users WHERE username = ? AND pw = ?";
+            PreparedStatement ps = conn.prepareStatement(loginSql);
             ps.setString(1, username);
+            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-
+            
             if (rs.next()) {
-                String storedPassword = rs.getString("password");
-                int userID = rs.getInt("user_id");
-
-                if (storedPassword.equals(password)) {
-                    // Successful login
-                    jsonResponse.addProperty("status", "success");
-                    jsonResponse.addProperty("userID", userID);
-                    jsonResponse.addProperty("username", username);
-                } else {
-                    // Incorrect password
-                    jsonResponse.addProperty("status", "error");
-                    jsonResponse.addProperty("message", "Incorrect username or password.");
-                }
+                // Login successful
+                int userID = rs.getInt("userID");
+                String fetchedUsername = rs.getString("username");
+                
+                // Create session
+                HttpSession session = request.getSession();
+                session.setAttribute("userID", userID);
+                session.setAttribute("username", fetchedUsername);
+                
+                jsonResponse.addProperty("status", "success");
+                jsonResponse.addProperty("message", "Login successful!");
+                jsonResponse.addProperty("userID", userID);
+                jsonResponse.addProperty("username", fetchedUsername);
+                jsonResponse.addProperty("redirect", "marketplace.html");
             } else {
-                // Incorrect username
+                // Login failed
                 jsonResponse.addProperty("status", "error");
-                jsonResponse.addProperty("message", "Incorrect username or password.");
+                jsonResponse.addProperty("message", "Invalid username or password.");
             }
-
+            
             rs.close();
             ps.close();
             conn.close();
+            
         } catch (ClassNotFoundException e) {
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Database driver not found.");
             e.printStackTrace();
         } catch (SQLException e) {
             jsonResponse.addProperty("status", "error");
-            jsonResponse.addProperty("message", "Database error.");
+            jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "An unexpected error occurred.");
             e.printStackTrace();
         }
-
+        
         out.print(gson.toJson(jsonResponse));
+    }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("userID") != null) {
+            // User is already logged in, redirect to marketplace
+            response.sendRedirect("marketplace.html");
+        } else {
+            // User is not logged in, redirect to login page
+            response.sendRedirect("login.html");
+        }
     }
 }

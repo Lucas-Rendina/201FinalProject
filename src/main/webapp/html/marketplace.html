@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Marketplace</title>
+    <link rel="stylesheet" href="../css/marketplace.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Course Marketplace</h1>
+            <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="marketplace.html">Marketplace</a></li>
+                <li><a href="schedule.html">My Schedule</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+        </header>
+        
+        <div class="filters">
+            <input type="text" id="searchCourse" placeholder="Search courses...">
+        </div>
+
+        <div class="course-grid" id="courseContainer">
+            <!-- Courses will be dynamically inserted here -->
+        </div>
+    </div>
+	<footer>
+        <p>&copy; 2024 USC Course Marketplace</p>
+    </footer>
+    
+    <script>
+        $(document).ready(function() {
+            // Load courses on page load
+            $.get("../MarketplaceServlet", function(data) {
+                displayCourses(data);
+            });
+
+            // Search functionality
+            $("#searchCourse").on("keyup", function() {
+                let value = $(this).val().toLowerCase();
+                $(".course-card").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // Display courses function
+            function displayCourses(courses) {
+                const container = $("#courseContainer");
+                container.empty();
+                
+                courses.forEach(course => {
+                    const card = $(`
+                        <div class="course-card">
+                            <h3>${course.courseCode}</h3>
+                            <p class="professor">Professor: ${course.professor}</p>
+                            <p class="time">Time: ${course.stime}</p>
+                            <p class="contact">Contact: ${course.contact}</p>
+                            <button class="add-course" data-courseid="${course.courseCode}">Add Course</button>
+                        </div>
+                    `);
+                    
+                    container.append(card);
+                });
+
+                // Add course button click handler
+                $(".add-course").click(function() {
+                    const courseCode = $(this).data("courseid");
+                    $.post("../MarketplaceServlet", {
+                        action: "add",
+                        courseCode: courseCode
+                    }, function(response) {
+                        if (response.status === "success") {
+                            alert("Course added successfully!");
+                        } else {
+                            alert("Error adding course: " + response.message);
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
