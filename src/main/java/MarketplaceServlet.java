@@ -48,8 +48,35 @@ public class MarketplaceServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         
-        // Generate random courses
-        List<Course> courses = generateCourses();
+        List<Course> courses = new ArrayList<>();
+        
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT DISTINCT courseCode, professor, stime, contact FROM schedule";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Course course = new Course();
+                course.setCourseCode(rs.getString("courseCode"));
+                course.setProfessor(rs.getString("professor"));
+                course.setStime(rs.getString("stime"));
+                course.setContact(rs.getString("contact"));
+                courses.add(course);
+            }
+            
+            rs.close();
+            ps.close();
+            conn.close();
+            
+        } catch (Exception e) {
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+            out.print(gson.toJson(jsonResponse));
+            e.printStackTrace();
+            return;
+        }
         
         out.print(gson.toJson(courses));
     }
@@ -79,19 +106,15 @@ public class MarketplaceServlet extends HttpServlet {
                 
                 // Insert into schedule table
                 String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) " +
-                                 "SELECT ?, ?, professor, stime, contact " +
-                                 "FROM (SELECT ? as courseCode, ? as professor, ? as stime, ? as contact) AS temp " +
-                                 "WHERE NOT EXISTS (SELECT 1 FROM schedule WHERE userID = ? AND courseCode = ?)";
+                                 "SELECT ?, courseCode, professor, stime, contact " +
+                                 "FROM schedule " +
+                                 "WHERE courseCode = ? AND NOT EXISTS (SELECT 1 FROM schedule WHERE userID = ? AND courseCode = ?)";
                 
                 PreparedStatement ps = conn.prepareStatement(insertSql);
                 ps.setInt(1, userID);
                 ps.setString(2, courseCode);
-                ps.setString(3, courseCode);
-                ps.setString(4, getRandomElement(PROFESSORS));
-                ps.setString(5, getRandomElement(TIME_SLOTS));
-                ps.setString(6, "prof@university.edu");
-                ps.setInt(7, userID);
-                ps.setString(8, courseCode);
+                ps.setInt(3, userID);
+                ps.setString(4, courseCode);
                 
                 int rowsAffected = ps.executeUpdate();
                 
@@ -100,7 +123,7 @@ public class MarketplaceServlet extends HttpServlet {
                     jsonResponse.addProperty("message", "Course added successfully");
                 } else {
                     jsonResponse.addProperty("status", "error");
-                    jsonResponse.addProperty("message", "Course already exists in schedule");
+                    jsonResponse.addProperty("message", "Course already exists in schedule or does not exist");
                 }
                 
                 ps.close();
@@ -116,41 +139,20 @@ public class MarketplaceServlet extends HttpServlet {
         out.print(gson.toJson(jsonResponse));
     }
     
-    private List<Course> generateCourses() {
-        List<Course> courses = new ArrayList<>();
-        Random random = new Random();
+    class Course {
+        private String courseCode;
+        private String professor;
+        private String stime;
+        private String contact;
         
-        for (String courseCode : COURSE_CODES) {
-            Course course = new Course();
-            course.setCourseCode(courseCode);
-            course.setProfessor(getRandomElement(PROFESSORS));
-            course.setStime(getRandomElement(TIME_SLOTS));
-            course.setContact("prof@university.edu");
-            courses.add(course);
-        }
-        
-        return courses;
+        // Getters and setters
+        public String getCourseCode() { return courseCode; }
+        public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+        public String getProfessor() { return professor; }
+        public void setProfessor(String professor) { this.professor = professor; }
+        public String getStime() { return stime; }
+        public void setStime(String stime) { this.stime = stime; }
+        public String getContact() { return contact; }
+        public void setContact(String contact) { this.contact = contact; }
     }
-    
-    private <T> T getRandomElement(List<T> list) {
-        Random random = new Random();
-        return list.get(random.nextInt(list.size()));
-    }
-}
-
-class Course {
-    private String courseCode;
-    private String professor;
-    private String stime;
-    private String contact;
-    
-    // Getters and setters
-    public String getCourseCode() { return courseCode; }
-    public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
-    public String getProfessor() { return professor; }
-    public void setProfessor(String professor) { this.professor = professor; }
-    public String getStime() { return stime; }
-    public void setStime(String stime) { this.stime = stime; }
-    public String getContact() { return contact; }
-    public void setContact(String contact) { this.contact = contact; }
 }

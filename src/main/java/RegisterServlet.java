@@ -3,6 +3,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -65,7 +66,7 @@ public class RegisterServlet extends HttpServlet {
             ps.close();
 
             // Insert new user
-            String insertUserSql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+            String insertUserSql = "INSERT INTO users (username, email, pw) VALUES (?, ?, ?)";
             ps = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, username);
             ps.setString(2, email);
@@ -81,6 +82,9 @@ public class RegisterServlet extends HttpServlet {
                     jsonResponse.addProperty("message", "Registration successful.");
                     jsonResponse.addProperty("userID", userID);
                     jsonResponse.addProperty("username", username);
+                    HttpSession session = request.getSession();
+    				session.setAttribute("username", username);
+    				response.sendRedirect("html/index.html");
                 } else {
                     jsonResponse.addProperty("status", "error");
                     jsonResponse.addProperty("message", "Failed to retrieve user ID.");
@@ -93,10 +97,6 @@ public class RegisterServlet extends HttpServlet {
 
             ps.close();
             conn.close();
-        } catch (ClassNotFoundException e) {
-            jsonResponse.addProperty("status", "error");
-            jsonResponse.addProperty("message", "Database driver not found.");
-            e.printStackTrace();
         } catch (SQLException e) {
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Database error.");

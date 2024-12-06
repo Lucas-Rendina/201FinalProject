@@ -3,6 +3,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -37,17 +38,17 @@ public class LoginServlet extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+    	System.out.println(username+" "+password);
         try {
             Connection conn = DBConnection.getConnection();
-            String checkUserSql = "SELECT user_id, password FROM users WHERE username = ?";
+            String checkUserSql = "SELECT userID, pw FROM users WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(checkUserSql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String storedPassword = rs.getString("password");
-                int userID = rs.getInt("user_id");
+                String storedPassword = rs.getString("pw");
+                int userID = rs.getInt("userID");
                 
                 if (storedPassword.equals(password)) { 
                     // Login success
@@ -55,13 +56,18 @@ public class LoginServlet extends HttpServlet {
                     jsonResponse.addProperty("message", "Login successful.");
                     jsonResponse.addProperty("userID", userID);
                     jsonResponse.addProperty("username", username);
+                    HttpSession session = request.getSession();
+    				session.setAttribute("username", username);
+    				
                 } else {
                     // Incorrect password
                     jsonResponse.addProperty("status", "error");
                     jsonResponse.addProperty("message", "Incorrect username or password.");
+                    System.out.println(password+"!="+storedPassword);
                 }
             } else {
                 // Username not found
+            	System.out.println("uname nf"+username);
                 jsonResponse.addProperty("status", "error");
                 jsonResponse.addProperty("message", "Incorrect username or password.");
             }
@@ -69,11 +75,7 @@ public class LoginServlet extends HttpServlet {
             rs.close();
             ps.close();
             conn.close();
-        } catch (ClassNotFoundException e) {
-            jsonResponse.addProperty("status", "error");
-            jsonResponse.addProperty("message", "Database driver not found.");
-            e.printStackTrace();
-        } catch (SQLException e) {
+        }  catch (SQLException e) {
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Database error.");
             e.printStackTrace();
