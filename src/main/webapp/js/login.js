@@ -1,46 +1,39 @@
-function validateForm() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
-    
-    // Reset error message
-    errorMessage.textContent = '';
-    
-    // Basic validation
-    if (!username || !password) {
-        errorMessage.textContent = 'Please fill in all fields.';
-        return false;
-    }
-    
-    // Submit form using AJAX
-    $.ajax({
-        type: 'POST',
-        url: '../LoginServlet',
-        data: {
-            username: username,
-            password: password
-        },
-        success: function(response) {
-            if (response.status === 'success') {
-                window.location.href = response.redirect;
-            } else {
-                errorMessage.textContent = response.message;
-            }
-        },
-        error: function(xhr, status, error) {
-            errorMessage.textContent = 'An error occurred. Please try again.';
-            console.error('Error:', error);
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('login-form');
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        // Clear any existing messages
+        let existingMessage = document.querySelector('.response-message');
+        if (existingMessage) {
+            existingMessage.remove();
         }
+
+        // Send form data via AJAX
+        fetch('LoginServlet', {
+            method: 'POST',
+            body: new FormData(form)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const messageElement = document.createElement('p');
+            messageElement.classList.add('response-message');
+
+            if (data.status === "success") {
+                messageElement.textContent = data.message;
+                messageElement.style.color = 'green';
+                // Optionally redirect to another page after successful login:
+                // setTimeout(() => window.location.href = 'account.html', 2000);
+            } else {
+                messageElement.textContent = data.message;
+                messageElement.style.color = 'red';
+            }
+
+            form.insertAdjacentElement('afterend', messageElement);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     });
-    
-    return false;
-}
-
-// Optional: Clear error message when user starts typing
-document.getElementById('username').addEventListener('input', function() {
-    document.getElementById('error-message').textContent = '';
-});
-
-document.getElementById('password').addEventListener('input', function() {
-    document.getElementById('error-message').textContent = '';
 });
