@@ -41,14 +41,36 @@ public class MarketplaceServlet extends HttpServlet {
     public MarketplaceServlet() {
         super();
     }
+    
+    private List<Course> generateCourses() {
+        List<Course> courses = new ArrayList<>();
+        Random random = new Random();
+        
+        for (String courseCode : COURSE_CODES) {
+            Course course = new Course();
+            course.setCourseCode(courseCode);
+            course.setProfessor(getRandomElement(PROFESSORS));
+            course.setStime(getRandomElement(TIME_SLOTS));
+            course.setContact("prof@university.edu");
+            courses.add(course);
+        }
+        
+        return courses;
+    }
+    
+    private <T> T getRandomElement(List<T> list) {
+        Random random = new Random();
+        return list.get(random.nextInt(list.size()));
+    }
 
+    
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         
-        List<Course> courses = new ArrayList<>();
+        List<Course> courses = generateCourses();
         
         try {
             Connection conn = DBConnection.getConnection();
