@@ -17,11 +17,7 @@ CREATE TABLE schedule(
     courseCode char(8) NOT NULL,
     professor char(50) NOT NULL,
     stime char(20) NOT NULL,
-<<<<<<< Updated upstream
-    contact char(40) NOT NULL,
-=======
     contact char(50) NOT NULL,
->>>>>>> Stashed changes
     FOREIGN KEY fk1(userID) REFERENCES users(userID)
 );
 
