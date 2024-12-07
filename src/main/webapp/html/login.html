@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - USC Course Marketplace</title>
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="../js/login.js"></script>
 </head>
 <body>
     <header>
@@ -16,26 +15,36 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="marketplace.html">Marketplace</a></li>
                 <li><a href="schedule.html">My Schedule</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="login.html" id="authLink">Login</a></li>
             </ul>
         </nav>
     </header>
-    <main>
-        <form id="login-form">
 
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+    <main role="main">
+        <form id="loginForm" onsubmit="return false;">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
             
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div id="error-message" class="error-message"></div>
             
             <button type="submit">Login</button>
         </form>
+
         <p>Don't have an account? <a href="register.html">Sign Up</a></p>
     </main>
+
     <footer>
         <p>&copy; 2024 USC Course Marketplace</p>
     </footer>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/login.js"></script>
 </body>
 </html>

@@ -31,9 +31,6 @@ public class AccountServlet extends HttpServlet {
         if ("checkLogin".equals(action)) {
             boolean isLoggedIn = (session != null && session.getAttribute("userID") != null);
             jsonResponse.addProperty("loggedIn", isLoggedIn);
-            System.out.println("Login status check: " + isLoggedIn);
-            System.out.println("Session ID: " + (session != null ? session.getId() : "null"));
-            System.out.println("UserID: " + (session != null ? session.getAttribute("userID") : "null"));
         }
         else if ("getUserInfo".equals(action)) {
             if (session != null && session.getAttribute("userID") != null) {
@@ -54,6 +51,36 @@ public class AccountServlet extends HttpServlet {
                     conn.close();
                 } catch (Exception e) {
                     jsonResponse.addProperty("error", "Database error: " + e.getMessage());
+                }
+            }
+        }
+        else if ("getEnrolledCourses".equals(action)) {
+            if (session != null && session.getAttribute("userID") != null) {
+                try {
+                    Connection conn = DBConnection.getConnection();
+                    String sql = "SELECT * FROM schedule WHERE userID = ?";
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setInt(1, (Integer) session.getAttribute("userID"));
+                    ResultSet rs = ps.executeQuery();
+                    
+                    JsonArray coursesArray = new JsonArray();
+                    while (rs.next()) {
+                        JsonObject course = new JsonObject();
+                        course.addProperty("courseCode", rs.getString("courseCode"));
+                        course.addProperty("professor", rs.getString("professor"));
+                        course.addProperty("stime", rs.getString("stime"));
+                        course.addProperty("contact", rs.getString("contact"));
+                        coursesArray.add(course);
+                    }
+                    
+                    jsonResponse.add("courses", coursesArray);
+                    
+                    rs.close();
+                    ps.close();
+                    conn.close();
+                } catch (Exception e) {
+                    jsonResponse.addProperty("error", "Database error: " + e.getMessage());
+                    e.printStackTrace(); // Add this for debugging
                 }
             }
         }
