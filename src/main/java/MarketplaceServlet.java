@@ -46,15 +46,48 @@ public class MarketplaceServlet extends HttpServlet {
         List<Course> courses = new ArrayList<>();
         Random random = new Random();
         
-        for (String courseCode : COURSE_CODES) {
-            Course course = new Course();
-            course.setCourseCode(courseCode);
-            course.setProfessor(getRandomElement(PROFESSORS));
-            course.setStime(getRandomElement(TIME_SLOTS));
-            course.setContact("prof@university.edu");
-            courses.add(course);
-        }
-        
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            for (String courseCode : COURSE_CODES) {
+                // Check if the course already exists in the database
+                String checkSql = "SELECT * FROM schedule WHERE courseCode = ?";
+                PreparedStatement checkPs = conn.prepareStatement(checkSql);
+                checkPs.setString(1, courseCode);
+                ResultSet checkRs = checkPs.executeQuery();
+
+                if (!checkRs.next()) {
+                    // Course does not exist, generate and add it
+                    Course course = new Course();
+                    course.setCourseCode(courseCode);
+                    course.setProfessor(getRandomElement(PROFESSORS));
+                    course.setStime(getRandomElement(TIME_SLOTS));
+                    course.setContact("prof@university.edu");
+                    courses.add(course);
+
+                    // Insert the generated course into the database
+                    String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) VALUES (?, ?, ?, ?, ?)";
+                    PreparedStatement insertPs = conn.prepareStatement(insertSql);
+                    insertPs.setInt(1, 1);
+                    insertPs.setString(2, course.getCourseCode());
+                    insertPs.setString(3, course.getProfessor());
+                    insertPs.setString(4, course.getStime());
+                    insertPs.setString(5, course.getContact());
+                    insertPs.executeUpdate();
+                    insertPs.close();
+                }
+
+                checkRs.close();
+                checkPs.close();
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
         return courses;
     }
     
@@ -69,8 +102,8 @@ public class MarketplaceServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
-        
-        List<Course> courses = generateCourses();
+        generateCourses();
+        List<Course> courses = new ArrayList<>();
         
         try {
             Connection conn = DBConnection.getConnection();
@@ -174,17 +207,26 @@ public class MarketplaceServlet extends HttpServlet {
                 
                 // Insert course into the schedule table
                 String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(insertSql);
+                PreparedStatement ps = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, userID);
                 ps.setString(2, courseName);
                 ps.setString(3, professor);
                 ps.setString(4, dayc+" "+startTime+"-"+endTime); 
                 System.out.println(contact);
                 ps.setString(5, contact);
+                ps.executeUpdate();
+                insertSql = "INSERT INTO relation (userID, schedID, relationtype) VALUES (?, ?, ?)";
+                PreparedStatement ps2 = conn.prepareStatement(insertSql);
+                ps2.setInt(1, userID);
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    ps2.setInt(2, generatedKeys.getInt(1));
+                }
+                ps2.setString(3, "owned");
 
                 int rowsAffected = ps.executeUpdate();
-
-                if (rowsAffected > 0) {
+                int rowsAffected2 = ps2.executeUpdate();
+                if (rowsAffected > 0 && rowsAffected2 > 0) {
                     jsonResponse.addProperty("status", "success");
                     jsonResponse.addProperty("message", "Course added to schedule successfully.");
                 } else {
@@ -193,6 +235,71 @@ public class MarketplaceServlet extends HttpServlet {
                 }
 
                 ps.close();
+                ps2.close();
+                conn.close();
+            } catch (SQLException e) {
+                jsonResponse.addProperty("status", "error");
+                jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+        } else if ("add".equals(action)) {
+            // New action to add a relationship
+            String courseCode = request.getParameter("courseCode");
+
+            try {
+                Connection conn = DBConnection.getConnection();
+
+                // Retrieve the schedID for the given courseCode
+                String querySql = "SELECT schedID FROM schedule WHERE courseCode = ?";
+                PreparedStatement queryPs = conn.prepareStatement(querySql);
+                queryPs.setString(1, courseCode);
+                ResultSet rs = queryPs.executeQuery();
+
+                if (rs.next()) {
+                    int schedID = rs.getInt("schedID");
+
+                    // Check if the entry already exists in the relation table
+                    String checkSql = "SELECT * FROM relation WHERE userID = ? AND schedID = ?";
+                    PreparedStatement checkPs = conn.prepareStatement(checkSql);
+                    checkPs.setInt(1, userID);
+                    checkPs.setInt(2, schedID);
+                    ResultSet checkRs = checkPs.executeQuery();
+
+                    if (checkRs.next()) {
+                        jsonResponse.addProperty("status", "error");
+                        jsonResponse.addProperty("message", "This course is already added.");
+                    } else {
+                        // Insert into the relation table
+                        String insertSql = "INSERT INTO relation (userID, schedID, relationtype) VALUES (?, ?, ?)";
+                        PreparedStatement ps = conn.prepareStatement(insertSql);
+                        ps.setInt(1, userID);
+                        ps.setInt(2, schedID);
+                        ps.setString(3, "enrolled");
+
+                    int rowsAffected = ps.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        jsonResponse.addProperty("status", "success");
+                        jsonResponse.addProperty("message", "Course added successfully!");
+                    } else {
+                        jsonResponse.addProperty("status", "error");
+                        jsonResponse.addProperty("message", "Failed to add course.");
+                    }
+
+                        ps.close();
+                    }
+
+                    checkRs.close();
+                    checkPs.close();
+                } else {
+                    jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "Course not found.");
+                }
+
+                rs.close();
+                queryPs.close();
                 conn.close();
             } catch (SQLException e) {
                 jsonResponse.addProperty("status", "error");

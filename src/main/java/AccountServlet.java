@@ -58,7 +58,10 @@ public class AccountServlet extends HttpServlet {
             if (session != null && session.getAttribute("userID") != null) {
                 try {
                     Connection conn = DBConnection.getConnection();
-                    String sql = "SELECT * FROM schedule WHERE userID = ?";
+                    String sql = "SELECT s.courseCode, s.professor, s.stime, s.contact " +
+                                 "FROM relation r " +
+                                 "JOIN schedule s ON r.schedID = s.schedID " +
+                                 "WHERE r.userID = ?";
                     PreparedStatement ps = conn.prepareStatement(sql);
                     ps.setInt(1, (Integer) session.getAttribute("userID"));
                     ResultSet rs = ps.executeQuery();
@@ -102,6 +105,53 @@ public class AccountServlet extends HttpServlet {
                 session.invalidate();
             }
             jsonResponse.addProperty("status", "success");
+        } else if ("removeCourse".equals(action)) {
+            HttpSession session = request.getSession(false);
+            int userID = (Integer) session.getAttribute("userID");
+            String courseCode = request.getParameter("courseCode");
+            
+            try {
+                Connection conn = DBConnection.getConnection();
+                String querySql = "SELECT schedID FROM schedule WHERE courseCode = ?";
+                PreparedStatement queryPs = conn.prepareStatement(querySql);
+                queryPs.setString(1, courseCode);
+                ResultSet rs = queryPs.executeQuery();
+
+                if (rs.next()) {
+                    int schedID = rs.getInt("schedID");
+
+                    // Remove the course from the relation table
+                    String deleteSql = "DELETE FROM relation WHERE userID = ? AND schedID = ?";
+                    PreparedStatement deletePs = conn.prepareStatement(deleteSql);
+                    deletePs.setInt(1, userID);
+                    deletePs.setInt(2, schedID);
+
+                    int rowsAffected = deletePs.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        jsonResponse.addProperty("status", "success");
+                        jsonResponse.addProperty("message", "Course removed successfully.");
+                    } else {
+                        jsonResponse.addProperty("status", "error");
+                        jsonResponse.addProperty("message", "Course not found or not enrolled.");
+                    }
+
+                    deletePs.close();
+                } else {
+                    jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "Course not found.");
+                }
+
+                rs.close();
+                queryPs.close();
+                conn.close();
+            } catch(SQLException e) {
+                jsonResponse.addProperty("status", "error");
+                jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
         }
         
         out.print(new Gson().toJson(jsonResponse));

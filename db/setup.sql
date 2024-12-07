@@ -13,7 +13,7 @@ CREATE TABLE users(
 
 CREATE TABLE schedule(
 	schedID int primary key auto_increment,
-    userID int not null,
+    userID int NOT NULL,
     courseCode char(8) NOT NULL,
     professor char(50) NOT NULL,
     stime char(20) NOT NULL,
@@ -29,3 +29,5 @@ CREATE TABLE relation(
     FOREIGN KEY fk2(userID) REFERENCES users(userID),
     FOREIGN KEY fk3(schedID) REFERENCES schedule(schedID)
 );
+
+INSERT INTO users (username, email, pw) VALUES ("admin", "admin", "admin");
