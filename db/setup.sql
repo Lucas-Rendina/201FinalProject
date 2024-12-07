@@ -17,14 +17,19 @@ CREATE TABLE schedule(
     courseCode char(8) NOT NULL,
     professor char(50) NOT NULL,
     stime char(20) NOT NULL,
+<<<<<<< Updated upstream
     contact char(40) NOT NULL,
+=======
+    contact char(50) NOT NULL,
+>>>>>>> Stashed changes
     FOREIGN KEY fk1(userID) REFERENCES users(userID)
 );
 
-CREATE TABLE interested(
+CREATE TABLE relation(
 	entryID int primary key auto_increment,
     userID int not null,
     schedID int not null,
+    relationtype char(20) not null,
     FOREIGN KEY fk2(userID) REFERENCES users(userID),
     FOREIGN KEY fk3(schedID) REFERENCES schedule(schedID)
 );
