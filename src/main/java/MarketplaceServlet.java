@@ -48,8 +48,35 @@ public class MarketplaceServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         
-        // Generate random courses
-        List<Course> courses = generateCourses();
+        List<Course> courses = new ArrayList<>();
+        
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT DISTINCT courseCode, professor, stime, contact FROM schedule";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Course course = new Course();
+                course.setCourseCode(rs.getString("courseCode"));
+                course.setProfessor(rs.getString("professor"));
+                course.setStime(rs.getString("stime"));
+                course.setContact(rs.getString("contact"));
+                courses.add(course);
+            }
+            
+            rs.close();
+            ps.close();
+            conn.close();
+            
+        } catch (Exception e) {
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty("status", "error");
+            jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+            out.print(gson.toJson(jsonResponse));
+            e.printStackTrace();
+            return;
+        }
         
         out.print(gson.toJson(courses));
     }
@@ -84,36 +111,55 @@ public class MarketplaceServlet extends HttpServlet {
 
             try {
                 Connection conn = DBConnection.getConnection();
-<<<<<<< Updated upstream
+                String querySql = "SELECT email FROM users WHERE userID = ?";
+                PreparedStatement queryPs = conn.prepareStatement(querySql);
+                queryPs.setInt(1, userID);
+                ResultSet rs = queryPs.executeQuery();
+    
+                String contact = null;
+                if (rs.next()) {
+                    contact = rs.getString("email");
+                } else {
+                    jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "User email not found.");
+                    out.print(gson.toJson(jsonResponse));
+                    rs.close();
+                    queryPs.close();
+                    conn.close();
+                    return;
+                }
+                rs.close();
+                queryPs.close();
+                String dayc="";
+                for(int i=0;i<days.length;i++) {
+                	if(days[i].equalsIgnoreCase("Monday")) {
+                		dayc+="M";
+                	}
+                	if(days[i].equalsIgnoreCase("Tuesday")) {
+                		dayc+="T";
+                	}
+                	if(days[i].equalsIgnoreCase("Wednesday")) {
+                		dayc+="W";
+                	}
+                	if(days[i].equalsIgnoreCase("Thursday")) {
+                		dayc+="Th";
+                	}
+                	if(days[i].equalsIgnoreCase("Friday")) {
+                		dayc+="F";
+                	}
+                }
                 
-                // Insert into schedule table
-                String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) " +
-                                 "SELECT ?, ?, professor, stime, contact " +
-                                 "FROM (SELECT ? as courseCode, ? as professor, ? as stime, ? as contact) AS temp " +
-                                 "WHERE NOT EXISTS (SELECT 1 FROM schedule WHERE userID = ? AND courseCode = ?)";
                 
-                PreparedStatement ps = conn.prepareStatement(insertSql);
-                ps.setInt(1, userID);
-                ps.setString(2, courseCode);
-                ps.setString(3, courseCode);
-                ps.setString(4, getRandomElement(PROFESSORS));
-                ps.setString(5, getRandomElement(TIME_SLOTS));
-                ps.setString(6, "prof@university.edu");
-                ps.setInt(7, userID);
-                ps.setString(8, courseCode);
-                
-=======
-
                 // Insert course into the schedule table
                 String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(insertSql);
                 ps.setInt(1, userID);
                 ps.setString(2, courseName);
                 ps.setString(3, professor);
-                ps.setString(4, days+startTime+endTime); // Store days as a comma-separated string
-                ps.setString(5, );
+                ps.setString(4, dayc+" "+startTime+"-"+endTime); 
+                System.out.println(contact);
+                ps.setString(5, contact);
 
->>>>>>> Stashed changes
                 int rowsAffected = ps.executeUpdate();
 
                 if (rowsAffected > 0) {
@@ -121,11 +167,7 @@ public class MarketplaceServlet extends HttpServlet {
                     jsonResponse.addProperty("message", "Course added to schedule successfully.");
                 } else {
                     jsonResponse.addProperty("status", "error");
-<<<<<<< Updated upstream
-                    jsonResponse.addProperty("message", "Course already exists in schedule");
-=======
                     jsonResponse.addProperty("message", "Failed to add course to schedule.");
->>>>>>> Stashed changes
                 }
 
                 ps.close();
@@ -142,41 +184,20 @@ public class MarketplaceServlet extends HttpServlet {
         out.print(gson.toJson(jsonResponse));
     }
     
-    private List<Course> generateCourses() {
-        List<Course> courses = new ArrayList<>();
-        Random random = new Random();
+    class Course {
+        private String courseCode;
+        private String professor;
+        private String stime;
+        private String contact;
         
-        for (String courseCode : COURSE_CODES) {
-            Course course = new Course();
-            course.setCourseCode(courseCode);
-            course.setProfessor(getRandomElement(PROFESSORS));
-            course.setStime(getRandomElement(TIME_SLOTS));
-            course.setContact("prof@university.edu");
-            courses.add(course);
-        }
-        
-        return courses;
+        // Getters and setters
+        public String getCourseCode() { return courseCode; }
+        public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+        public String getProfessor() { return professor; }
+        public void setProfessor(String professor) { this.professor = professor; }
+        public String getStime() { return stime; }
+        public void setStime(String stime) { this.stime = stime; }
+        public String getContact() { return contact; }
+        public void setContact(String contact) { this.contact = contact; }
     }
-    
-    private <T> T getRandomElement(List<T> list) {
-        Random random = new Random();
-        return list.get(random.nextInt(list.size()));
-    }
-}
-
-class Course {
-    private String courseCode;
-    private String professor;
-    private String stime;
-    private String contact;
-    
-    // Getters and setters
-    public String getCourseCode() { return courseCode; }
-    public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
-    public String getProfessor() { return professor; }
-    public void setProfessor(String professor) { this.professor = professor; }
-    public String getStime() { return stime; }
-    public void setStime(String stime) { this.stime = stime; }
-    public String getContact() { return contact; }
-    public void setContact(String contact) { this.contact = contact; }
 }

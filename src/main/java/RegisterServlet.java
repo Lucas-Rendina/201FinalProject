@@ -65,7 +65,7 @@ public class RegisterServlet extends HttpServlet {
             ps.close();
 
             // Insert new user
-            String insertUserSql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+            String insertUserSql = "INSERT INTO users (username, email, pw) VALUES (?, ?, ?)";
             ps = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, username);
             ps.setString(2, email);

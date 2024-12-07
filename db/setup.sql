@@ -8,8 +8,6 @@ CREATE TABLE users(
 	userID int primary key auto_increment,
     username varchar(20) BINARY not null,
     pw varchar(20) BINARY not null,
-    fName varchar(20) not null,
-    lName varchar(20) not null,
     email varchar(50) not null
 );
 
@@ -19,7 +17,7 @@ CREATE TABLE schedule(
     courseCode char(8) NOT NULL,
     professor char(50) NOT NULL,
     stime char(20) NOT NULL,
-    contact char(20) NOT NULL,
+    contact char(40) NOT NULL,
     FOREIGN KEY fk1(userID) REFERENCES users(userID)
 );
 

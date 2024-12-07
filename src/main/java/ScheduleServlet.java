@@ -61,7 +61,9 @@ public class ScheduleServlet extends HttpServlet {
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Database error: " + e.getMessage());
             e.printStackTrace();
-        }
+        } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
         out.print(gson.toJson(jsonResponse));
     }
