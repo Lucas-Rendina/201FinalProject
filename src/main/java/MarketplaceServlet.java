@@ -72,10 +72,19 @@ public class MarketplaceServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if ("add".equals(action)) {
-            String courseCode = request.getParameter("courseCode");
+        if ("addCourse".equals(action)) {
+            // Retrieve form data
+            String courseName = request.getParameter("courseName");
+            String professor = request.getParameter("professor");
+            String[] days = request.getParameterValues("days");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
+            boolean tradeable = Boolean.parseBoolean(request.getParameter("tradeable"));
+            String price = request.getParameter("price");
+
             try {
                 Connection conn = DBConnection.getConnection();
+<<<<<<< Updated upstream
                 
                 // Insert into schedule table
                 String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) " +
@@ -93,24 +102,41 @@ public class MarketplaceServlet extends HttpServlet {
                 ps.setInt(7, userID);
                 ps.setString(8, courseCode);
                 
+=======
+
+                // Insert course into the schedule table
+                String insertSql = "INSERT INTO schedule (userID, courseCode, professor, stime, contact) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement ps = conn.prepareStatement(insertSql);
+                ps.setInt(1, userID);
+                ps.setString(2, courseName);
+                ps.setString(3, professor);
+                ps.setString(4, days+startTime+endTime); // Store days as a comma-separated string
+                ps.setString(5, );
+
+>>>>>>> Stashed changes
                 int rowsAffected = ps.executeUpdate();
-                
+
                 if (rowsAffected > 0) {
                     jsonResponse.addProperty("status", "success");
-                    jsonResponse.addProperty("message", "Course added successfully");
+                    jsonResponse.addProperty("message", "Course added to schedule successfully.");
                 } else {
                     jsonResponse.addProperty("status", "error");
+<<<<<<< Updated upstream
                     jsonResponse.addProperty("message", "Course already exists in schedule");
+=======
+                    jsonResponse.addProperty("message", "Failed to add course to schedule.");
+>>>>>>> Stashed changes
                 }
-                
+
                 ps.close();
                 conn.close();
-                
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 jsonResponse.addProperty("status", "error");
                 jsonResponse.addProperty("message", "Database error: " + e.getMessage());
                 e.printStackTrace();
-            }
+            } catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
         }
         
         out.print(gson.toJson(jsonResponse));

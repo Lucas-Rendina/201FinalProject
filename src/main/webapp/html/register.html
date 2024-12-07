@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../js/register.js"></script>
 </head>
 <body>
     <header>
@@ -15,14 +15,13 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="marketplace.html">Marketplace</a></li>
                 <li><a href="schedule.html">My Schedule</a></li>
-                <li><a href="account.html">Account</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="login.html" id="authLink">Login</a></li>
             </ul>
         </nav>
     </header>
 
     <main role="main">
-        <form id="registrationForm" onsubmit="return validateAndSubmit(event)">
+        <form id="registrationForm" method="post" action="RegisterServlet">
             <div>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
