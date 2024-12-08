@@ -38,7 +38,7 @@ public class LoginServlet extends HttpServlet {
             jsonResponse.addProperty("status", "error");
             jsonResponse.addProperty("message", "Username and password are required.");
             out.print(gson.toJson(jsonResponse));
-            return;
+            return;	
         }
         
         try {
