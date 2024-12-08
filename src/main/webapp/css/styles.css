@@ -10,12 +10,9 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     line-height: 1.6;
-    background: #ffffff;
     color: #333333;
     padding: 0;
     transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
     margin: 0;
 }
@@ -25,14 +22,13 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    overflow: hidden;
-    flex:1;
+    flex: 1;
 }
 
 /* Header Styling */
 header {
     text-align: center;
-    padding: 2rem 0;
+    padding: 1rem 0; /* Reduced padding */
     background: linear-gradient(to bottom, #fdfdfd, #f9f9f9);
     position: relative;
     z-index: 10;
@@ -44,13 +40,13 @@ header h1 {
     font-weight: 600;
     letter-spacing: -0.5px;
     color: #111;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Reduced margin */
     opacity: 0;
     animation: fadeIn 1s ease forwards;
 }
 
 nav {
-    padding: 0.5rem 0; /* Reduced vertical padding */
+    padding: 0.3rem 0; /* Reduced vertical padding further */
     opacity: 0;
     transform: translateY(-10px);
     animation: fadeUp 1.2s ease forwards;
@@ -61,8 +57,8 @@ nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 2rem; /* Keep horizontal spacing the same */
-    padding: 0; /* Remove additional padding from ul */
+    gap: 2rem;
+    padding: 0;
 }
 
 nav ul li a {
@@ -72,13 +68,14 @@ nav ul li a {
     font-size: 1rem;
     letter-spacing: 0.5px;
     position: relative;
-    padding: 0.3rem 0; /* Reduced vertical padding for links */
+    padding: 0.2rem 0; /* Reduced vertical padding for links */
     transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
     color: #111;
 }
+
 
 
 footer {

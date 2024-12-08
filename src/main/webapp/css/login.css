@@ -39,24 +39,6 @@ body::before {
     filter: brightness(0.9);
 }
 
-/* Header */
-header {
-    text-align: center;
-    padding: 2rem 0;
-    animation: fadeInDown 1s ease forwards;
-    opacity: 0;
-}
-
-header h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-
-
-
 /* Main Content Area */
 main {
     max-width: 400px;
