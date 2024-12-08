@@ -12,9 +12,12 @@ body {
     line-height: 1.6;
     background: #ffffff;
     color: #333333;
-    margin: 0;
     padding: 0;
     transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
 /* Layout Containers */
@@ -23,6 +26,7 @@ body {
     margin: 0 auto;
     padding: 2rem;
     overflow: hidden;
+    flex:1;
 }
 
 /* Header Styling */
@@ -46,6 +50,7 @@ header h1 {
 }
 
 nav {
+    padding: 0.5rem 0; /* Reduced vertical padding */
     opacity: 0;
     transform: translateY(-10px);
     animation: fadeUp 1.2s ease forwards;
@@ -56,12 +61,8 @@ nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    padding: 0.5rem 0;
-}
-
-nav ul li {
-    display: inline-block;
+    gap: 2rem; /* Keep horizontal spacing the same */
+    padding: 0; /* Remove additional padding from ul */
 }
 
 nav ul li a {
@@ -71,7 +72,7 @@ nav ul li a {
     font-size: 1rem;
     letter-spacing: 0.5px;
     position: relative;
-    padding: 0.5rem;
+    padding: 0.3rem 0; /* Reduced vertical padding for links */
     transition: color 0.3s ease;
 }
 
@@ -79,9 +80,9 @@ nav ul li a:hover {
     color: #111;
 }
 
-/* Footer Styling */
+
 footer {
-    background: #f2f2f2;
+    background: #990000;
     color: #888;
     text-align: center;
     padding: 1.5rem 0;
