@@ -54,8 +54,6 @@ public class AccountServlet extends HttpServlet {
                 }
             }
         }
-<<<<<<< Updated upstream
-=======
         else if ("getEnrolledCourses".equals(action)) {
             if (session != null && session.getAttribute("userID") != null) {
                 try {
@@ -89,7 +87,6 @@ public class AccountServlet extends HttpServlet {
                 }
             }
         }
->>>>>>> Stashed changes
         
         out.print(gson.toJson(jsonResponse));
     }

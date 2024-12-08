@@ -310,3 +310,12 @@
         font-size: 0.9rem;
     }
 }
+
+/* Define a set of default colors that will be used if custom colors aren't set */
+:root {
+    --course-color-MATH-407: #64b5f6;
+    --course-color-CSCI-104: #81c784;
+    --course-color-BUAD-304: #e57373;
+    --course-color-BUAD-302: #ba68c8;
+    --course-color-DSO-462: #ffb74d;
+}

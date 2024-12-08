@@ -27,13 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function checkLoginStatus() {
-<<<<<<< Updated upstream
-    fetch('AccountServlet?action=checkLogin')
-=======
 
     fetch('../AccountServlet?action=checkLogin')
 
->>>>>>> Stashed changes
         .then(response => response.json())
 
         .then(data => {
@@ -59,13 +55,9 @@ function checkLoginStatus() {
 
 
 function loadUserInfo() {
-<<<<<<< Updated upstream
-    fetch('AccountServlet?action=getUserInfo')
-=======
 
     fetch('../AccountServlet?action=getUserInfo')
 
->>>>>>> Stashed changes
         .then(response => response.json())
 
         .then(data => {
@@ -83,44 +75,14 @@ function loadUserInfo() {
 
 
 function loadEnrolledCourses() {
-<<<<<<< Updated upstream
-    fetch('AccountServlet?action=getEnrolledCourses')
-=======
 
     console.log('Loading enrolled courses...');
 
     fetch('../AccountServlet?action=getEnrolledCourses')
 
->>>>>>> Stashed changes
         .then(response => response.json())
 
         .then(data => {
-<<<<<<< Updated upstream
-            const coursesList = document.getElementById('coursesList');
-            coursesList.innerHTML = '';
-            
-            data.courses.forEach(course => {
-                const courseCard = document.createElement('div');
-                courseCard.className = 'course-card';
-                courseCard.innerHTML = `
-                    <h3>${course.courseCode}</h3>
-                    <p><strong>Professor:</strong> ${course.professor}</p>
-                    <p><strong>Time:</strong> ${course.stime}</p>
-                    <p><strong>Contact:</strong> ${course.contact}</p>
-                `;
-                coursesList.appendChild(courseCard);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function handleSignOut() {
-    fetch('AccountServlet?action=signout', { method: 'POST' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                window.location.href = 'index.html';
-=======
 
             console.log('Received courses data:', data);
 
@@ -306,7 +268,6 @@ function createCalendarStructure() {
 
                 timeRow.appendChild(dayCell);
 
->>>>>>> Stashed changes
             }
 
             
@@ -327,7 +288,7 @@ function createCalendarStructure() {
 
 function addCourseToCalendar(course) {
 
-    const [days, time] = course.stime.split(' ');
+    const [daysStr, time] = course.stime.split(' ');
 
     const [startTime, endTime] = time.split('-');
 
@@ -353,17 +314,63 @@ function addCourseToCalendar(course) {
 
     
 
-    // Map days to column indices
+    // Parse days string to handle two-character days (Th) correctly
 
-    const dayMap = {
+    const getDays = (daysStr) => {
 
-        'M': 0, 'T': 1, 'W': 2, 'H': 3, 'F': 4
+        const days = [];
+
+        for (let i = 0; i < daysStr.length; i++) {
+
+            if (daysStr[i] === 'T' && i + 1 < daysStr.length && daysStr[i + 1] === 'h') {
+
+                days.push('Th');
+
+                i++; // Skip the 'h'
+
+            } else {
+
+                days.push(daysStr[i]);
+
+            }
+
+        }
+
+        return days;
 
     };
 
     
 
-    [...days].forEach(day => {
+    // Map days to column indices
+
+    const dayMap = {
+
+        'M': 0,
+
+        'T': 1,
+
+        'W': 2,
+
+        'Th': 3,
+
+        'F': 4
+
+    };
+
+    
+
+    // Generate a unique color for this course
+
+    const courseColor = `var(--course-color-${course.courseCode.replace(/\s+/g, '-')})`;
+
+    
+
+    // Parse days and create course blocks
+
+    const days = getDays(daysStr);
+
+    days.forEach(day => {
 
         if (dayMap.hasOwnProperty(day)) {
 
@@ -388,6 +395,8 @@ function addCourseToCalendar(course) {
             courseElement.style.top = `${startMinutes}px`;
 
             courseElement.style.height = `${duration}px`;
+
+            courseElement.style.setProperty('--course-color', courseColor);
 
             
 
