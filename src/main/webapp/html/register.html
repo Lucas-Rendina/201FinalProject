@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script></head>
 <body>
     <header>
         <h1>Create Your Account</h1>
@@ -21,7 +20,7 @@
     </header>
 
     <main role="main">
-        <form id="registrationForm" onsubmit="return validateAndSubmit(event)">
+        <form id="registrationForm" method="post" onsubmit="return validateAndSubmit(event)">
             <div>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
