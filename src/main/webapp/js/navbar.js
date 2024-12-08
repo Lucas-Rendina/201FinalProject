@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Check login status and update navbar
-    fetch('AccountServlet?action=checkLogin')
+    fetch('../AccountServlet?action=checkLogin')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
