@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup sign out button
     document.getElementById('signoutBtn').addEventListener('click', handleSignOut);
+	document.getElementById('deleteBtn').addEventListener('click', handleDelete);
 });
 
 function checkLoginStatus() {
@@ -67,4 +68,15 @@ function handleSignOut() {
             }
         })
         .catch(error => console.error('Error:', error));
+}
+
+function handleDelete() {
+	fetch('AccountServlet?action=delete', { method: 'POST' })
+	        .then(response => response.json())
+	        .then(data => {
+	            if (data.status === 'success') {
+	                window.location.href = 'index.html';
+	            }
+	        })
+	        .catch(error => console.error('Error:', error));
 }
