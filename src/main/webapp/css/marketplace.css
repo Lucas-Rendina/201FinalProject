@@ -1,140 +1,139 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #fff;
-    color: #333;
-    transition: background-color 0.4s ease, color 0.4s ease;
+	font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background-color: #fff;
+	color: #333;
+	transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    overflow: hidden;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+	overflow: hidden;
 }
 
 header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding: 2rem 0;
-    background: linear-gradient(to bottom, #fafafa, #f5f5f5);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 1s ease forwards;
+	text-align: center;
+	margin-bottom: 2rem;
+	padding: 2rem 0;
+	background: linear-gradient(to bottom, #fafafa, #f5f5f5);
+	border-radius: 12px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeIn 1s ease forwards;
 }
 
 .filters {
-    margin-bottom: 2rem;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeIn 1s ease forwards;
-    animation-delay: 0.2s;
+	margin-bottom: 2rem;
+	text-align: center;
+	opacity: 0;
+	transform: translateY(10px);
+	animation: fadeIn 1s ease forwards;
+	animation-delay: 0.2s;
 }
 
 #searchCourse {
-    width: 100%;
-    max-width: 500px;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+	width: 100%;
+	max-width: 500px;
+	padding: 0.8rem;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	font-size: 1rem;
+	transition: border-color 0.3s ease;
 }
 
 #searchCourse:focus {
-    border-color: #aaa;
-    outline: none;
+	border-color: #aaa;
+	outline: none;
 }
 
 .course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 2rem 0;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 1s ease forwards;
-    animation-delay: 0.4s;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+	padding: 2rem 0;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeIn 1s ease forwards;
+	animation-delay: 0.4s;
 }
 
 .course-card {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInCard 0.8s ease forwards;
-    animation-delay: 0.5s;
-    position: relative;
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 2rem;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeInCard 0.8s ease forwards;
+	animation-delay: 0.5s;
+	position: relative;
 }
 
 .course-card:not(:nth-of-type(1)) {
-    animation-delay: calc(0.5s + (var(--i) * 0.1s));
+	animation-delay: calc(0.5s + (var(--i) * 0.1s));
 }
 
 .course-card h3 {
-    color: #111;
-    margin-bottom: 10px;
-    font-size: 1.4rem;
-    letter-spacing: -0.5px;
+	color: #111;
+	margin-bottom: 10px;
+	font-size: 1.4rem;
+	letter-spacing: -0.5px;
 }
 
 .course-card p {
-    color: #666;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-    line-height: 1.4;
+	color: #666;
+	margin-bottom: 1rem;
+	font-size: 0.95rem;
+	line-height: 1.4;
 }
 
 .add-course {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: #111;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+	width: 100%;
+	padding: 0.8rem;
+	background-color: #111;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .add-course:hover {
-    background-color: #000;
-    transform: translateY(-2px);
+	background-color: #000;
+	transform: translateY(-2px);
 }
 
 .professor {
-    font-weight: 500;
-    display: block;
-    margin-bottom: 0.5rem;
+	font-weight: 500;
+	display: block;
+	margin-bottom: 0.5rem;
 }
 
 .time {
-    color: #888;
-    display: block;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
+	color: #888;
+	display: block;
+	font-size: 0.85rem;
+	margin-bottom: 0.5rem;
 }
 
 .contact {
-    font-style: italic;
-    color: #aaa;
-    font-size: 0.85rem;
+	font-style: italic;
+	color: #aaa;
+	font-size: 0.85rem;
 }
 
-/* Animations */
 @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+	0% { opacity: 0; transform: translateY(20px); }
+	100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInCard {
-    0% { opacity: 0; transform: translateY(40px); }
-    100% { opacity: 1; transform: translateY(0); }
+	0% { opacity: 0; transform: translateY(40px); }
+	100% { opacity: 1; transform: translateY(0); }
 }

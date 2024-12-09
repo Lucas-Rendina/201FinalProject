@@ -1,26 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Check if user is logged in
 
-    checkLoginStatus();
+	checkLoginStatus();
 
-    
+	
 
-    // Load user information
 
-    loadUserInfo();
+	loadUserInfo();
 
-    
+	
 
-    // Load enrolled courses
 
-    loadEnrolledCourses();
+	loadEnrolledCourses();
 
-    
+	
 
-    // Setup sign out button
 
-    document.getElementById('signoutBtn').addEventListener('click', handleSignOut);
+	document.getElementById('signoutBtn').addEventListener('click', handleSignOut);
 
 });
 
@@ -28,27 +24,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function checkLoginStatus() {
 
-    fetch('../AccountServlet?action=checkLogin')
+	fetch('../AccountServlet?action=checkLogin')
 
-        .then(response => response.json())
+		.then(response => response.json())
 
-        .then(data => {
+		.then(data => {
 
-            if (!data.loggedIn) {
+			if (!data.loggedIn) {
 
-                window.location.href = 'login.html';
+				window.location.href = 'login.html';
 
-            }
+			}
 
-        })
+		})
 
-        .catch(error => {
+		.catch(error => {
 
-            console.error('Error:', error);
+			console.error('Error:', error);
 
-            window.location.href = 'login.html';
+			window.location.href = 'login.html';
 
-        });
+		});
 
 }
 
@@ -56,19 +52,19 @@ function checkLoginStatus() {
 
 function loadUserInfo() {
 
-    fetch('../AccountServlet?action=getUserInfo')
+	fetch('../AccountServlet?action=getUserInfo')
 
-        .then(response => response.json())
+		.then(response => response.json())
 
-        .then(data => {
+		.then(data => {
 
-            document.getElementById('displayUsername').textContent = data.username;
+			document.getElementById('displayUsername').textContent = data.username;
 
-            document.getElementById('displayEmail').textContent = data.email;
+			document.getElementById('displayEmail').textContent = data.email;
 
-        })
+		})
 
-        .catch(error => console.error('Error:', error));
+		.catch(error => console.error('Error:', error));
 
 }
 
@@ -76,113 +72,108 @@ function loadUserInfo() {
 
 function loadEnrolledCourses() {
 
-    console.log('Loading enrolled courses...');
+	console.log('Loading enrolled courses...');
 
-    fetch('../AccountServlet?action=getEnrolledCourses')
+	fetch('../AccountServlet?action=getEnrolledCourses')
 
-        .then(response => response.json())
+		.then(response => response.json())
 
-        .then(data => {
+		.then(data => {
 
-            console.log('Received courses data:', data);
+			console.log('Received courses data:', data);
 
-            
+			
 
-            // Update courses list
 
-            const coursesList = document.getElementById('coursesList');
+			const coursesList = document.getElementById('coursesList');
 
-            coursesList.innerHTML = '';
+			coursesList.innerHTML = '';
 
-            
+			
 
-            // Update calendar view
 
-            const calendarView = document.getElementById('calendarView');
+			const calendarView = document.getElementById('calendarView');
 
-            calendarView.innerHTML = '';
+			calendarView.innerHTML = '';
 
-            
+			
 
-            if (data.courses && data.courses.length > 0) {
+			if (data.courses && data.courses.length > 0) {
 
-                // Create course cards
 
-                data.courses.forEach(course => {
+				data.courses.forEach(course => {
 
-                    const courseCard = document.createElement('div');
+					const courseCard = document.createElement('div');
 
-                    courseCard.className = 'course-card';
+					courseCard.className = 'course-card';
 
-                    courseCard.innerHTML = `
+					courseCard.innerHTML = `
 
-                        <h3>${course.courseCode}</h3>
+						<h3>${course.courseCode}</h3>
 
-                        <p><strong>Professor:</strong> ${course.professor}</p>
+						<p><strong>Professor:</strong> ${course.professor}</p>
 
-                        <p><strong>Time:</strong> ${course.stime}</p>
+						<p><strong>Time:</strong> ${course.stime}</p>
 
-                        <p><strong>Contact:</strong> ${course.contact}</p>
+						<p><strong>Contact:</strong> ${course.contact}</p>
 
-                        <button class="remove-course-btn" data-coursecode="${course.courseCode}">Remove Course</button>
+						<button class="remove-course-btn" data-coursecode="${course.courseCode}">Remove Course</button>
 
-                    `;
+					`;
 
-                    coursesList.appendChild(courseCard);
+					coursesList.appendChild(courseCard);
 
-                    
+					
 
-                    // Add click handler for the remove button
 
-                    const removeBtn = courseCard.querySelector('.remove-course-btn');
+					const removeBtn = courseCard.querySelector('.remove-course-btn');
 
-                    removeBtn.addEventListener('click', () => removeCourse(course.courseCode, courseCard));
+					removeBtn.addEventListener('click', () => removeCourse(course.courseCode, courseCard));
 
-                });
+				});
 
-                
+				
 
-                // Create and populate calendar
 
-                const calendar = createCalendarStructure();
+				const calendar = createCalendarStructure();
 
-                calendarView.appendChild(calendar);
+				calendarView.appendChild(calendar);
 
-                data.courses.forEach(course => {
+				data.courses.forEach(course => {
 
-                    addCourseToCalendar(course);
+					addCourseToCalendar(course);
 
-                });
+				});
 
-            } else {
+			} else {
 
-                console.log('No courses found');
+				console.log('No courses found');
 
-                coursesList.innerHTML = '<p class="no-courses">No courses enrolled yet.</p>';
+				coursesList.innerHTML = '<p class="no-courses">No courses enrolled yet.</p>';
 
-                calendarView.innerHTML = '<p class="no-courses">No courses to display in calendar.</p>';
+				calendarView.innerHTML = '<p class="no-courses">No courses to display in calendar.</p>';
 
-            }
+			}
 
-        })
+		})
 
-        .catch(error => {
+		.catch(error => {
 
-            console.error('Error loading courses:', error);
+			console.error('Error loading courses:', error);
 
-            const coursesList = document.getElementById('coursesList');
+			const coursesList = document.getElementById('coursesList');
 
-            const calendarView = document.getElementById('calendarView');
+			const calendarView = document.getElementById('calendarView');
 
-            if (coursesList && calendarView) {
+			if (coursesList && calendarView) {
 
-                coursesList.innerHTML = '<p class="error-message">Error loading courses. Please try again later.</p>';
+				coursesList.innerHTML = '<p class="error-message">Error loading courses. Please try again later.</p>';
 
-                calendarView.innerHTML = '<p class="error-message">Error loading calendar. Please try again later.</p>';
+				calendarView.innerHTML = '<p class="error-message">Error loading calendar. Please try again later.</p>';
 
-            }
+			}
 
-        });
+		});
 
 }
 
@@ -190,97 +181,94 @@ function loadEnrolledCourses() {
 
 function createCalendarStructure() {
 
-    const calendar = document.createElement('div');
+	const calendar = document.createElement('div');
 
-    calendar.className = 'calendar-grid';
+	calendar.className = 'calendar-grid';
 
-    
+	
 
-    // Create header row
 
-    const header = document.createElement('div');
+	const header = document.createElement('div');
 
-    header.className = 'calendar-header';
+	header.className = 'calendar-header';
 
-    const timeHeader = document.createElement('div');
+	const timeHeader = document.createElement('div');
 
-    timeHeader.className = 'time-header';
+	timeHeader.className = 'time-header';
 
-    timeHeader.textContent = 'Time';
+	timeHeader.textContent = 'Time';
 
-    header.appendChild(timeHeader);
+	header.appendChild(timeHeader);
 
-    
+	
 
-    ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
+	['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
 
-        const dayHeader = document.createElement('div');
+		const dayHeader = document.createElement('div');
 
-        dayHeader.className = 'day-header';
+		dayHeader.className = 'day-header';
 
-        dayHeader.textContent = day;
+		dayHeader.textContent = day;
 
-        header.appendChild(dayHeader);
+		header.appendChild(dayHeader);
 
-    });
+	});
 
-    
+	
 
-    calendar.appendChild(header);
+	calendar.appendChild(header);
 
-    
+	
 
-    // Create time slots (every 30 minutes)
 
-    for (let hour = 8; hour <= 17; hour++) {
+	for (let hour = 8; hour <= 17; hour++) {
 
-        for (let minute of [0, 30]) {
+		for (let minute of [0, 30]) {
 
-            const timeRow = document.createElement('div');
+			const timeRow = document.createElement('div');
 
-            timeRow.className = 'calendar-row';
+			timeRow.className = 'calendar-row';
 
-            
+			
 
-            const timeCell = document.createElement('div');
+			const timeCell = document.createElement('div');
 
-            timeCell.className = 'time-cell';
+			timeCell.className = 'time-cell';
 
-            timeCell.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+			timeCell.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 
-            timeRow.appendChild(timeCell);
+			timeRow.appendChild(timeCell);
 
-            
+			
 
-            // Add empty cells for each day
 
-            for (let day = 0; day < 5; day++) {
+			for (let day = 0; day < 5; day++) {
 
-                const dayCell = document.createElement('div');
+				const dayCell = document.createElement('div');
 
-                dayCell.className = 'day-cell';
+				dayCell.className = 'day-cell';
 
-                dayCell.dataset.day = day;
+				dayCell.dataset.day = day;
 
-                dayCell.dataset.hour = hour;
+				dayCell.dataset.hour = hour;
 
-                dayCell.dataset.minute = minute;
+				dayCell.dataset.minute = minute;
 
-                timeRow.appendChild(dayCell);
+				timeRow.appendChild(dayCell);
 
-            }
+			}
 
-            
+			
 
-            calendar.appendChild(timeRow);
+			calendar.appendChild(timeRow);
 
-        }
+		}
 
-    }
+	}
 
-    
+	
 
-    return calendar;
+	return calendar;
 
 }
 
@@ -288,153 +276,146 @@ function createCalendarStructure() {
 
 function addCourseToCalendar(course) {
 
-    const [daysStr, time] = course.stime.split(' ');
+	const [daysStr, time] = course.stime.split(' ');
 
-    const [startTime, endTime] = time.split('-');
+	const [startTime, endTime] = time.split('-');
 
-    
+	
 
-    // Convert time to minutes since 8:00
 
-    const getMinutes = (timeStr) => {
+	const getMinutes = (timeStr) => {
 
-        const [hours, minutes] = timeStr.split(':').map(Number);
+		const [hours, minutes] = timeStr.split(':').map(Number);
 
-        return (hours - 8) * 60 + minutes;
+		return (hours - 8) * 60 + minutes;
 
-    };
+	};
 
-    
+	
 
-    const startMinutes = getMinutes(startTime);
+	const startMinutes = getMinutes(startTime);
 
-    const endMinutes = getMinutes(endTime);
+	const endMinutes = getMinutes(endTime);
 
-    const duration = endMinutes - startMinutes;
+	const duration = endMinutes - startMinutes;
 
-    
+	
 
-    // Parse days string to handle combined days (TTH) correctly
 
-    const getDays = (daysStr) => {
+	const getDays = (daysStr) => {
 
-        const days = [];
+		const days = [];
 
-        for (let i = 0; i < daysStr.length; i++) {
+		for (let i = 0; i < daysStr.length; i++) {
 
-            if (i + 1 < daysStr.length) {
+			if (i + 1 < daysStr.length) {
 
-                // Check for "TH" combination
 
-                if (daysStr[i] === 'T' && daysStr[i + 1].toUpperCase() === 'H') {
+				if (daysStr[i] === 'T' && daysStr[i + 1].toUpperCase() === 'H') {
 
-                    days.push('TH');
+					days.push('TH');
 
-                    i++; // Skip the 'H'
+					i++; 
 
-                    continue;
+					continue;
 
-                }
+				}
 
-                // Check for "TT" combination (Tuesday and Thursday)
 
-                if (daysStr[i] === 'T' && daysStr[i + 1] === 'T') {
+				if (daysStr[i] === 'T' && daysStr[i + 1] === 'T') {
 
-                    days.push('T');  // Tuesday
+					days.push('T');  
 
-                    days.push('TH'); // Thursday
+					days.push('TH'); 
 
-                    i++; // Skip the second 'T'
+					i++; 
 
-                    continue;
+					continue;
 
-                }
+				}
 
-            }
+			}
 
-            days.push(daysStr[i]);
+			days.push(daysStr[i]);
 
-        }
+		}
 
-        return days;
+		return days;
 
-    };
+	};
 
-    
+	
 
-    // Map days to column indices
 
-    const dayMap = {
+	const dayMap = {
 
-        'M': 0,
+		'M': 0,
 
-        'T': 1,
+		'T': 1,
 
-        'W': 2,
+		'W': 2,
 
-        'TH': 3,
+		'TH': 3,
 
-        'F': 4
+		'F': 4
 
-    };
+	};
 
-    
+	
 
-    // Assign a color based on the course index
 
-    const colors = ['#64b5f6', '#81c784', '#e57373', '#ba68c8', '#ffb74d', '#4fc3f7', '#aed581', '#ff8a65'];
+	const colors = ['#64b5f6', '#81c784', '#e57373', '#ba68c8', '#ffb74d', '#4fc3f7', '#aed581', '#ff8a65'];
 
-    const courseIndex = Math.abs(course.courseCode.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
+	const courseIndex = Math.abs(course.courseCode.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
 
-    const courseColor = colors[courseIndex % colors.length];
+	const courseColor = colors[courseIndex % colors.length];
 
-    
+	
 
-    // Parse days and create course blocks
 
-    const days = getDays(daysStr);
+	const days = getDays(daysStr);
 
-    days.forEach(day => {
+	days.forEach(day => {
 
-        if (dayMap.hasOwnProperty(day)) {
+		if (dayMap.hasOwnProperty(day)) {
 
-            const courseElement = document.createElement('div');
+			const courseElement = document.createElement('div');
 
-            courseElement.className = 'course-block';
+			courseElement.className = 'course-block';
 
-            courseElement.dataset.courseCode = course.courseCode;
+			courseElement.dataset.courseCode = course.courseCode;
 
-            courseElement.innerHTML = `
+			courseElement.innerHTML = `
 
-                <h3>${course.courseCode}</h3>
+				<h3>${course.courseCode}</h3>
 
-                <p>${course.professor}</p>
+				<p>${course.professor}</p>
 
-                <p>${startTime}-${endTime}</p>
+				<p>${startTime}-${endTime}</p>
 
-            `;
+			`;
 
-            
+			
 
-            courseElement.style.top = `${startMinutes}px`;
+			courseElement.style.top = `${startMinutes}px`;
 
-            courseElement.style.height = `${duration}px`;
+			courseElement.style.height = `${duration}px`;
 
-            courseElement.style.backgroundColor = courseColor;
+			courseElement.style.backgroundColor = courseColor;
 
-            
+			
 
-            const dayColumn = document.querySelector(`.day-cell[data-day="${dayMap[day]}"]`);
+			const dayColumn = document.querySelector(`.day-cell[data-day="${dayMap[day]}"]`);
 
-            if (dayColumn) {
+			if (dayColumn) {
 
-                dayColumn.appendChild(courseElement);
+				dayColumn.appendChild(courseElement);
 
-            }
+			}
 
-        }
+		}
 
-    });
+	});
 
 }
 
@@ -442,109 +423,105 @@ function addCourseToCalendar(course) {
 
 function removeCourse(courseCode, courseCard) {
 
-    if (confirm('Are you sure you want to remove this course?')) {
+	if (confirm('Are you sure you want to remove this course?')) {
 
-        fetch('../AccountServlet', {
+		fetch('../AccountServlet', {
 
-            method: 'POST',
+			method: 'POST',
 
-            headers: {
+			headers: {
 
-                'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Type': 'application/x-www-form-urlencoded',
 
-            },
+			},
 
-            body: `action=removeCourse&courseCode=${courseCode}`
+			body: `action=removeCourse&courseCode=${courseCode}`
 
-        })
+		})
 
-        .then(response => response.json())
+		.then(response => response.json())
 
-        .then(data => {
+		.then(data => {
 
-            if (data.status === 'success') {
+			if (data.status === 'success') {
 
-                // Remove the course card
 
-                courseCard.remove();
+				courseCard.remove();
 
-                
+				
 
-                // Reload the entire schedule
 
-                fetch('../AccountServlet?action=getEnrolledCourses')
+				fetch('../AccountServlet?action=getEnrolledCourses')
 
-                    .then(response => response.json())
+					.then(response => response.json())
 
-                    .then(data => {
+					.then(data => {
 
-                        const calendarView = document.getElementById('calendarView');
+						const calendarView = document.getElementById('calendarView');
 
-                        calendarView.innerHTML = '';
+						calendarView.innerHTML = '';
 
-                        
+						
 
-                        if (data.courses && data.courses.length > 0) {
+						if (data.courses && data.courses.length > 0) {
 
-                            // Recreate and populate calendar
 
-                            const calendar = createCalendarStructure();
+							const calendar = createCalendarStructure();
 
-                            calendarView.appendChild(calendar);
+							calendarView.appendChild(calendar);
 
-                            data.courses.forEach(course => {
+							data.courses.forEach(course => {
 
-                                addCourseToCalendar(course);
+								addCourseToCalendar(course);
 
-                            });
+							});
 
-                        } else {
+						} else {
 
-                            calendarView.innerHTML = '<p class="no-courses">No courses to display in calendar.</p>';
+							calendarView.innerHTML = '<p class="no-courses">No courses to display in calendar.</p>';
 
-                        }
+						}
 
-                    })
+					})
 
-                    .catch(error => {
+					.catch(error => {
 
-                        console.error('Error reloading schedule:', error);
+						console.error('Error reloading schedule:', error);
 
-                        calendarView.innerHTML = '<p class="error-message">Error loading calendar. Please try again later.</p>';
+						calendarView.innerHTML = '<p class="error-message">Error loading calendar. Please try again later.</p>';
 
-                    });
+					});
 
-                
+				
 
-                // Check if there are any courses left in the list
 
-                const remainingCourseCards = document.querySelectorAll('.course-card');
+				const remainingCourseCards = document.querySelectorAll('.course-card');
 
-                if (remainingCourseCards.length === 0) {
+				if (remainingCourseCards.length === 0) {
 
-                    const coursesList = document.getElementById('coursesList');
+					const coursesList = document.getElementById('coursesList');
 
-                    coursesList.innerHTML = '<p class="no-courses">No courses enrolled yet.</p>';
+					coursesList.innerHTML = '<p class="no-courses">No courses enrolled yet.</p>';
 
-                }
+				}
 
-            } else {
+			} else {
 
-                alert('Error removing course: ' + data.message);
+				alert('Error removing course: ' + data.message);
 
-            }
+			}
 
-        })
+		})
 
-        .catch(error => {
+		.catch(error => {
 
-            console.error('Error:', error);
+			console.error('Error:', error);
 
-            alert('Error removing course. Please try again.');
+			alert('Error removing course. Please try again.');
 
-        });
+		});
 
-    }
+	}
 
 }
 
@@ -552,20 +529,20 @@ function removeCourse(courseCode, courseCard) {
 
 function handleSignOut() {
 
-    fetch('../AccountServlet?action=signout', { method: 'POST' })
+	fetch('../AccountServlet?action=signout', { method: 'POST' })
 
-        .then(response => response.json())
+		.then(response => response.json())
 
-        .then(data => {
+		.then(data => {
 
-            if (data.status === 'success') {
+			if (data.status === 'success') {
 
-                window.location.href = 'index.html';
+				window.location.href = 'index.html';
 
-            }
+			}
 
-        })
+		})
 
-        .catch(error => console.error('Error:', error));
+		.catch(error => console.error('Error:', error));
 
 }

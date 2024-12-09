@@ -71,7 +71,6 @@
 					</tr>
 				</thead>
 				<tbody>
-					<!-- Time slots dynamically filled here -->
 				</tbody>
 			</table>
 		</div>
@@ -81,130 +80,121 @@
 	</footer>
 
 	<script>
-        // JavaScript for dynamically updating the schedule
-        const form = document.getElementById("add-course-form");
-        const startTime = document.getElementById("start-time");
-        const endTime = document.getElementById("end-time");
-        const scheduleGrid = document.getElementById("schedule-grid").getElementsByTagName("tbody")[0];
+		const form = document.getElementById("add-course-form");
+		const startTime = document.getElementById("start-time");
+		const endTime = document.getElementById("end-time");
+		const scheduleGrid = document.getElementById("schedule-grid").getElementsByTagName("tbody")[0];
 
-        // Time validation
-        endTime.addEventListener("change", function() {
-            if (startTime.value && endTime.value) {
-                if (endTime.value <= startTime.value) {
-                    alert("End time must be later than start time");
-                    endTime.value = "";
-                }
-            }
-        });
+		endTime.addEventListener("change", function() {
+			if (startTime.value && endTime.value) {
+				if (endTime.value <= startTime.value) {
+					alert("End time must be later than start time");
+					endTime.value = "";
+				}
+			}
+		});
 
-        startTime.addEventListener("change", function() {
-            if (startTime.value && endTime.value) {
-                if (endTime.value <= startTime.value) {
-                    alert("End time must be later than start time");
-                    endTime.value = "";
-                }
-            }
-        });
+		startTime.addEventListener("change", function() {
+			if (startTime.value && endTime.value) {
+				if (endTime.value <= startTime.value) {
+					alert("End time must be later than start time");
+					endTime.value = "";
+				}
+			}
+		});
 
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
+		form.addEventListener("submit", (event) => {
+			event.preventDefault();
 
-            // Get selected days from checkboxes
-            const selectedDays = [];
-            document.querySelectorAll('.day-option input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedDays.push(checkbox.value);
-            });
+			const selectedDays = [];
+			document.querySelectorAll('.day-option input[type="checkbox"]:checked').forEach(checkbox => {
+				selectedDays.push(checkbox.value);
+			});
 
-            if (selectedDays.length === 0) {
-                alert("Please select at least one day");
-                return;
-            }
+			if (selectedDays.length === 0) {
+				alert("Please select at least one day");
+				return;
+			}
 
-            // Retrieve form data
-            const courseName = document.getElementById("course-name").value;
-            const professor = document.getElementById("professor").value;
-            const startTime = document.getElementById("start-time").value;
-            const endTime = document.getElementById("end-time").value;
-            const tradeable = document.getElementById("tradeable").checked;
-            const price = document.getElementById("price").value;
+			const courseName = document.getElementById("course-name").value;
+			const professor = document.getElementById("professor").value;
+			const startTime = document.getElementById("start-time").value;
+			const endTime = document.getElementById("end-time").value;
+			const tradeable = document.getElementById("tradeable").checked;
+			const price = document.getElementById("price").value;
 
-            // Send data to server
-            fetch('../MarketplaceServlet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    'action': 'addCourse',
-                    'courseName': courseName,
-                    'professor': professor,
-                    'days': selectedDays.join(','),
-                    'startTime': startTime,
-                    'endTime': endTime,
-                    'tradeable': tradeable,
-                    'price': price
-                })
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('Failed to parse response:', text);
-                        throw new Error('Invalid JSON response');
-                    }
-                });
-            })
-            .then(data => {
-                console.log('Response data:', data);
-                if (data.status === 'success') {
-                    // Add course to the schedule grid (existing code)
-                    selectedDays.forEach(day => {
-                        const row = scheduleGrid.querySelector(`[data-time="${startTime}"]`) || createNewRow(startTime);
-                        const cell = row.querySelector(`[data-day="${day}"]`);
-                        cell.innerHTML = `
-                            <strong>${courseName}</strong><br>
-                            Prof: ${professor}<br>
-                            ${startTime} - ${endTime}<br>
-                            Tradeable: ${tradeable ? "Yes" : "No"}<br>
-                            Price: ${price ? `$${price}` : "N/A"}
-                        `;
-                        cell.classList.add(tradeable ? "tradeable" : "non-tradeable");
-                    });
-                    
-                    // Clear form fields
-                    form.reset();
-                } else {
-                    alert('Error adding course: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Detailed error:', error);
-                alert('Error adding course. Please try again. Details: ' + error.message);
-            });
-        });
+			fetch('../MarketplaceServlet', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					'action': 'addCourse',
+					'courseName': courseName,
+					'professor': professor,
+					'days': selectedDays.join(','),
+					'startTime': startTime,
+					'endTime': endTime,
+					'tradeable': tradeable,
+					'price': price
+				})
+			})
+			.then(response => {
+				console.log('Response status:', response.status);
+				return response.text().then(text => {
+					try {
+						return JSON.parse(text);
+					} catch (e) {
+						console.error('Failed to parse response:', text);
+						throw new Error('Invalid JSON response');
+					}
+				});
+			})
+			.then(data => {
+				console.log('Response data:', data);
+				if (data.status === 'success') {
+					selectedDays.forEach(day => {
+						const row = scheduleGrid.querySelector(`[data-time="${startTime}"]`) || createNewRow(startTime);
+						const cell = row.querySelector(`[data-day="${day}"]`);
+						cell.innerHTML = `
+							<strong>${courseName}</strong><br>
+							Prof: ${professor}<br>
+							${startTime} - ${endTime}<br>
+							Tradeable: ${tradeable ? "Yes" : "No"}<br>
+							Price: ${price ? `$${price}` : "N/A"}
+						`;
+						cell.classList.add(tradeable ? "tradeable" : "non-tradeable");
+					});
+					
+					form.reset();
+				} else {
+					alert('Error adding course: ' + data.message);
+				}
+			})
+			.catch(error => {
+				console.error('Detailed error:', error);
+				alert('Error adding course. Please try again. Details: ' + error.message);
+			});
+		});
 
-        function createNewRow(time) {
-            const row = document.createElement("tr");
-            row.setAttribute("data-time", time);
+		function createNewRow(time) {
+			const row = document.createElement("tr");
+			row.setAttribute("data-time", time);
 
-            // Add time column
-            const timeCell = document.createElement("td");
-            timeCell.textContent = time;
-            row.appendChild(timeCell);
+			const timeCell = document.createElement("td");
+			timeCell.textContent = time;
+			row.appendChild(timeCell);
 
-            // Add day columns
-            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].forEach(day => {
-                const cell = document.createElement("td");
-                cell.setAttribute("data-day", day);
-                row.appendChild(cell);
-            });
+			["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].forEach(day => {
+				const cell = document.createElement("td");
+				cell.setAttribute("data-day", day);
+				row.appendChild(cell);
+			});
 
-            scheduleGrid.appendChild(row);
-            return row;
-        }
-    </script>
-    <script src="../js/navbar.js"></script>
+			scheduleGrid.appendChild(row);
+			return row;
+		}
+	</script>
+	<script src="../js/navbar.js"></script>
 </body>
 </html>

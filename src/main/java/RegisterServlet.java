@@ -19,90 +19,89 @@ import java.sql.SQLException;
  */
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public RegisterServlet() {
-        // Default constructor
-    }
+	public RegisterServlet() {
+		// Default constructor
+	}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-          throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+		  throws ServletException, IOException {
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-          throws ServletException, IOException {
-        response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+		  throws ServletException, IOException {
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		Gson gson = new Gson();
 
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
 
-        JsonObject jsonResponse = new JsonObject();
+		JsonObject jsonResponse = new JsonObject();
 
-        try {
-            Connection conn = DBConnection.getConnection();
+		try {
+			Connection conn = DBConnection.getConnection();
 
-            // Check if username already exists
-            String checkUserSql = "SELECT * FROM users WHERE username = ?";
-            PreparedStatement ps = conn.prepareStatement(checkUserSql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
+			// Check if username already exists
+			String checkUserSql = "SELECT * FROM users WHERE username = ?";
+			PreparedStatement ps = conn.prepareStatement(checkUserSql);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                // Username exists
-                jsonResponse.addProperty("status", "error");
-                jsonResponse.addProperty("message", "Username already exists.");
-                out.print(gson.toJson(jsonResponse));
-                rs.close();
-                ps.close();
-                conn.close();
-                return;
-            }
-            rs.close();
-            ps.close();
+			if (rs.next()) {
+				jsonResponse.addProperty("status", "error");
+				jsonResponse.addProperty("message", "Username already exists.");
+				out.print(gson.toJson(jsonResponse));
+				rs.close();
+				ps.close();
+				conn.close();
+				return;
+			}
+			rs.close();
+			ps.close();
 
-            // Insert new user
-            String insertUserSql = "INSERT INTO users (username, email, pw) VALUES (?, ?, ?)";
-            ps = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, password);
+			// Insert new user
+			String insertUserSql = "INSERT INTO users (username, email, pw) VALUES (?, ?, ?)";
+			ps = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
+			ps.setString(1, username);
+			ps.setString(2, email);
+			ps.setString(3, password);
 
-            int rowsAffected = ps.executeUpdate();
+			int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected > 0) {
-                ResultSet generatedKeys = ps.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int userID = generatedKeys.getInt(1);
-                    jsonResponse.addProperty("status", "success");
-                    jsonResponse.addProperty("message", "Registration successful.");
-                    jsonResponse.addProperty("userID", userID);
-                    jsonResponse.addProperty("username", username);
-                } else {
-                    jsonResponse.addProperty("status", "error");
-                    jsonResponse.addProperty("message", "Failed to retrieve user ID.");
-                }
-                generatedKeys.close();
-            } else {
-                jsonResponse.addProperty("status", "error");
-                jsonResponse.addProperty("message", "Registration failed.");
-            }
+			if (rowsAffected > 0) {
+				ResultSet generatedKeys = ps.getGeneratedKeys();
+				if (generatedKeys.next()) {
+					int userID = generatedKeys.getInt(1);
+					jsonResponse.addProperty("status", "success");
+					jsonResponse.addProperty("message", "Registration successful.");
+					jsonResponse.addProperty("userID", userID);
+					jsonResponse.addProperty("username", username);
+				} else {
+					jsonResponse.addProperty("status", "error");
+					jsonResponse.addProperty("message", "Failed to retrieve user ID.");
+				}
+				generatedKeys.close();
+			} else {
+				jsonResponse.addProperty("status", "error");
+				jsonResponse.addProperty("message", "Registration failed.");
+			}
 
-            ps.close();
-            conn.close();
-        } catch (ClassNotFoundException e) {
-            jsonResponse.addProperty("status", "error");
-            jsonResponse.addProperty("message", "Database driver not found.");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            jsonResponse.addProperty("status", "error");
-            jsonResponse.addProperty("message", "Database error.");
-            e.printStackTrace();
-        }
+			ps.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			jsonResponse.addProperty("status", "error");
+			jsonResponse.addProperty("message", "Database driver not found.");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			jsonResponse.addProperty("status", "error");
+			jsonResponse.addProperty("message", "Database error.");
+			e.printStackTrace();
+		}
 
-        out.print(gson.toJson(jsonResponse));
-    }
+		out.print(gson.toJson(jsonResponse));
+	}
 }

@@ -1,226 +1,219 @@
-/* Global Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-/* Typography & Font Stack */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.6;
-    color: #333333;
-    padding: 0;
-    transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
-    min-height: 100vh;
-    margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	line-height: 1.6;
+	color: #333333;
+	padding: 0;
+	transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+	min-height: 100vh;
+	margin: 0;
 }
 
-/* Layout Containers */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    flex: 1;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+	flex: 1;
 }
 
-/* Header Styling */
 header {
-    text-align: center;
-    padding: 1rem 0; /* Reduced padding */
-    background: linear-gradient(to bottom, #fdfdfd, #f9f9f9);
-    position: relative;
-    z-index: 10;
-    transition: background 0.4s ease;
+	text-align: center;
+	padding: 1rem 0; 
+	background: linear-gradient(to bottom, #fdfdfd, #f9f9f9);
+	position: relative;
+	z-index: 10;
+	transition: background 0.4s ease;
 }
 
 header h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    color: #111;
-    margin-bottom: 0.5rem; /* Reduced margin */
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
+	font-size: 2.5rem;
+	font-weight: 600;
+	letter-spacing: -0.5px;
+	color: #111;
+	margin-bottom: 0.5rem; 
+	opacity: 0;
+	animation: fadeIn 1s ease forwards;
 }
 
 nav {
-    padding: 0.3rem 0; /* Reduced vertical padding further */
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: fadeUp 1.2s ease forwards;
-    animation-delay: 0.3s;
+	padding: 0.3rem 0; 
+	opacity: 0;
+	transform: translateY(-10px);
+	animation: fadeUp 1.2s ease forwards;
+	animation-delay: 0.3s;
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    padding: 0;
+	list-style: none;
+	display: flex;
+	justify-content: center;
+	gap: 2rem;
+	padding: 0;
 }
 
 nav ul li a {
-    color: #555;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-    position: relative;
-    padding: 0.2rem 0; /* Reduced vertical padding for links */
-    transition: color 0.3s ease;
+	color: #555;
+	text-decoration: none;
+	font-weight: 500;
+	font-size: 1rem;
+	letter-spacing: 0.5px;
+	position: relative;
+	padding: 0.2rem 0; 
+	transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-    color: #111;
+	color: #111;
 }
 
 
 
 footer {
-    background: #990000;
-    color: #888;
-    text-align: center;
-    padding: 1.5rem 0;
-    font-size: 0.9rem;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 1.2s ease forwards;
-    animation-delay: 0.5s;
+	background: #990000;
+	color: #888;
+	text-align: center;
+	padding: 1.5rem 0;
+	font-size: 0.9rem;
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	opacity: 0;
+	transform: translateY(10px);
+	animation: fadeUp 1.2s ease forwards;
+	animation-delay: 0.5s;
 }
 
 /* Form Styling */
 form {
-    margin: 2rem auto;
-    max-width: 600px;
-    padding: 1.5rem;
-    background: #ffffff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border-radius: 12px;
-    animation: fadeIn 1s ease forwards;
-    opacity: 0;
+	margin: 2rem auto;
+	max-width: 600px;
+	padding: 1.5rem;
+	background: #ffffff;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	border-radius: 12px;
+	animation: fadeIn 1s ease forwards;
+	opacity: 0;
 }
 
 form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 1rem;
-    color: #333;
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	font-size: 1rem;
+	color: #333;
 }
 
 form input, form select, form button {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1.2rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+	width: 100%;
+	padding: 0.8rem;
+	margin-bottom: 1.2rem;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	font-size: 1rem;
+	transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 form input:focus, form select:focus {
-    border-color: #aaa;
-    outline: none;
+	border-color: #aaa;
+	outline: none;
 }
 
 form button {
-    background: #333;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-radius: 8px;
-    transition: background 0.3s ease, transform 0.3s ease;
+	background: #333;
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 500;
+	border: none;
+	cursor: pointer;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	border-radius: 8px;
+	transition: background 0.3s ease, transform 0.3s ease;
 }
 
 form button:hover {
-    background: #111;
-    transform: translateY(-2px);
+	background: #111;
+	transform: translateY(-2px);
 }
 
-/* Schedule Display Styling */
 #schedule-display {
-    margin: 2rem auto;
-    max-width: 800px;
-    text-align: center;
-    animation: fadeIn 1s ease forwards;
-    opacity: 0;
+	margin: 2rem auto;
+	max-width: 800px;
+	text-align: center;
+	animation: fadeIn 1s ease forwards;
+	opacity: 0;
 }
 
 #schedule-display h2 {
-    margin-bottom: 1rem;
-    color: #111;
-    font-size: 2rem;
-    letter-spacing: -0.5px;
+	margin-bottom: 1rem;
+	color: #111;
+	font-size: 2rem;
+	letter-spacing: -0.5px;
 }
 
 #schedule-grid {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border-radius: 12px;
-    overflow: hidden;
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1rem 0;
+	background: #fff;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	border-radius: 12px;
+	overflow: hidden;
 }
 
 #schedule-grid th, #schedule-grid td {
-    border: none;
-    padding: 0.8rem;
-    text-align: center;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #eee;
+	border: none;
+	padding: 0.8rem;
+	text-align: center;
+	font-size: 0.9rem;
+	border-bottom: 1px solid #eee;
 }
 
 #schedule-grid th {
-    background: #f9f9f9;
-    color: #333;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
+	background: #f9f9f9;
+	color: #333;
+	text-transform: uppercase;
+	font-size: 0.9rem;
+	letter-spacing: 0.5px;
 }
 
 #schedule-grid td {
-    background: #fff;
-    min-height: 50px;
-    transition: background-color 0.3s ease;
+	background: #fff;
+	min-height: 50px;
+	transition: background-color 0.3s ease;
 }
 
 #schedule-grid td.tradeable {
-    background: #eafaf1;
+	background: #eafaf1;
 }
 
 #schedule-grid td.non-tradeable {
-    background: #fceaea;
+	background: #fceaea;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        gap: 1rem;
-    }
+	nav ul {
+		flex-direction: column;
+		gap: 1rem;
+	}
 
-    form, #schedule-display {
-        max-width: 90%;
-    }
+	form, #schedule-display {
+		max-width: 90%;
+	}
 }
 
-/* Animations */
 @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
+	0% { opacity: 0; transform: translateY(10px); }
+	100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+	0% { opacity: 0; transform: translateY(20px); }
+	100% { opacity: 1; transform: translateY(0); }
 }

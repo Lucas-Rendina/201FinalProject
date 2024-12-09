@@ -1,59 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account - USC Course Marketplace</title>
-    <link rel="stylesheet" href="../css/styles.css">
-     <link rel="stylesheet" href="../css/account.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Account - USC Course Marketplace</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	 <link rel="stylesheet" href="../css/account.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <header>
-    <h1>My Account</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="marketplace.html">Marketplace</a></li>
-                <li><a href="schedule.html">My Schedule</a></li>
-                <li><a href="account.html" id="authLink">Account</a></li>
-            </ul>
-        </nav>
-    </header>
+	<header>
+	<h1>My Account</h1>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="marketplace.html">Marketplace</a></li>
+				<li><a href="schedule.html">My Schedule</a></li>
+				<li><a href="account.html" id="authLink">Account</a></li>
+			</ul>
+		</nav>
+	</header>
 
-    <main class="account-container">
-        <section class="user-info">
-            <h1>Account Information</h1>
-            <div class="info-card">
-                <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-                <p><strong>Email:</strong> <span id="displayEmail"></span></p>
-            </div>
-        </section>
+	<main class="account-container">
+		<section class="user-info">
+			<h1>Account Information</h1>
+			<div class="info-card">
+				<p><strong>Username:</strong> <span id="displayUsername"></span></p>
+				<p><strong>Email:</strong> <span id="displayEmail"></span></p>
+			</div>
+		</section>
 
-        <section class="enrolled-courses">
-            <h2>My Enrolled Courses</h2>
-            <div id="coursesList" class="courses-grid">
-                <!-- Course cards will be dynamically inserted here -->
-            </div>
-        </section>
+		<section class="enrolled-courses">
+			<h2>My Enrolled Courses</h2>
+			<div id="coursesList" class="courses-grid">
+			</div>
+		</section>
 
-        <section class="schedule-view">
-            <h2>Weekly Schedule</h2>
-            <div id="calendarView">
-                <!-- Calendar will be dynamically inserted here -->
-            </div>
-        </section>
+		<section class="schedule-view">
+			<h2>Weekly Schedule</h2>
+			<div id="calendarView">
+			</div>
+		</section>
 
-        <section class="account-actions">
-            <button id="signoutBtn" class="signout-btn">Sign Out</button>
-        </section>
-    </main>
+		<section class="account-actions">
+			<button id="signoutBtn" class="signout-btn">Sign Out</button>
+		</section>
+	</main>
 
-    <footer>
-        <p>&copy; 2024 USC Course Marketplace</p>
-    </footer>
+	<footer>
+		<p>&copy; 2024 USC Course Marketplace</p>
+	</footer>
 
-    <script src="../js/navbar.js"></script>
-    <script src="../js/account.js"></script>
+	<script src="../js/navbar.js"></script>
+	<script src="../js/account.js"></script>
 </body>
 </html>

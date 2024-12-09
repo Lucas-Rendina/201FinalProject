@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script></head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Register</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script></head>
 <body>
-    <header>
-        <h1>Create Your Account</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="marketplace.html">Marketplace</a></li>
-                <li><a href="schedule.html">My Schedule</a></li>
-                <li><a href="login.html" id="authLink">Login</a></li>
-            </ul>
-        </nav>
-    </header>
+	<header>
+		<h1>Create Your Account</h1>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="marketplace.html">Marketplace</a></li>
+				<li><a href="schedule.html">My Schedule</a></li>
+				<li><a href="login.html" id="authLink">Login</a></li>
+			</ul>
+		</nav>
+	</header>
 
-    <main role="main">
-        <form id="registrationForm" method="post" onsubmit="return validateAndSubmit(event)">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            
-            <div>
-                <label for="confirmPassword">Confirm Password:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-                <span id="passwordError" style="color: red; display: none;">Passwords do not match!</span>
-            </div>
-            
-            <button type="submit">Register</button>
-        </form>
+	<main role="main">
+		<form id="registrationForm" method="post" onsubmit="return validateAndSubmit(event)">
+			<div>
+				<label for="username">Username:</label>
+				<input type="text" id="username" name="username" required>
+			</div>
+			
+			<div>
+				<label for="email">Email:</label>
+				<input type="email" id="email" name="email" required>
+			</div>
+			
+			<div>
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" required>
+			</div>
+			
+			<div>
+				<label for="confirmPassword">Confirm Password:</label>
+				<input type="password" id="confirmPassword" name="confirmPassword" required>
+				<span id="passwordError" style="color: red; display: none;">Passwords do not match!</span>
+			</div>
+			
+			<button type="submit">Register</button>
+		</form>
 
-        <p>Already have an account? <a href="login.html">Login</a></p>
-    </main>
+		<p>Already have an account? <a href="login.html">Login</a></p>
+	</main>
 
-    <footer>
-        <p>&copy; 2024 USC Course Marketplace</p>
-    </footer>
+	<footer>
+		<p>&copy; 2024 USC Course Marketplace</p>
+	</footer>
 
 	<script src="../js/register.js"></script>
 	
