@@ -314,7 +314,7 @@ function addCourseToCalendar(course) {
 
     
 
-    // Parse days string to handle two-character days (Th) correctly
+    // Parse days string to handle combined days (TTH) correctly
 
     const getDays = (daysStr) => {
 
@@ -322,17 +322,37 @@ function addCourseToCalendar(course) {
 
         for (let i = 0; i < daysStr.length; i++) {
 
-            if (daysStr[i] === 'T' && i + 1 < daysStr.length && daysStr[i + 1] === 'h') {
+            if (i + 1 < daysStr.length) {
 
-                days.push('Th');
+                // Check for "TH" combination
 
-                i++; // Skip the 'h'
+                if (daysStr[i] === 'T' && daysStr[i + 1].toUpperCase() === 'H') {
 
-            } else {
+                    days.push('TH');
 
-                days.push(daysStr[i]);
+                    i++; // Skip the 'H'
+
+                    continue;
+
+                }
+
+                // Check for "TT" combination (Tuesday and Thursday)
+
+                if (daysStr[i] === 'T' && daysStr[i + 1] === 'T') {
+
+                    days.push('T');  // Tuesday
+
+                    days.push('TH'); // Thursday
+
+                    i++; // Skip the second 'T'
+
+                    continue;
+
+                }
 
             }
+
+            days.push(daysStr[i]);
 
         }
 
@@ -352,7 +372,7 @@ function addCourseToCalendar(course) {
 
         'W': 2,
 
-        'Th': 3,
+        'TH': 3,
 
         'F': 4
 
@@ -360,9 +380,13 @@ function addCourseToCalendar(course) {
 
     
 
-    // Generate a unique color for this course
+    // Assign a color based on the course index
 
-    const courseColor = `var(--course-color-${course.courseCode.replace(/\s+/g, '-')})`;
+    const colors = ['#64b5f6', '#81c784', '#e57373', '#ba68c8', '#ffb74d', '#4fc3f7', '#aed581', '#ff8a65'];
+
+    const courseIndex = Math.abs(course.courseCode.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
+
+    const courseColor = colors[courseIndex % colors.length];
 
     
 
@@ -396,7 +420,7 @@ function addCourseToCalendar(course) {
 
             courseElement.style.height = `${duration}px`;
 
-            courseElement.style.setProperty('--course-color', courseColor);
+            courseElement.style.backgroundColor = courseColor;
 
             
 
