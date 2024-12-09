@@ -105,6 +105,56 @@ public class AccountServlet extends HttpServlet {
                 session.invalidate();
             }
             jsonResponse.addProperty("status", "success");
+        } else if("delete".equals(action)) {
+        //	System.out.println("Here");
+        	HttpSession session = request.getSession(false);
+        	
+        	if(session != null && session.getAttribute("userID") != null) {
+        		int userID = (Integer) session.getAttribute("userID");
+        		
+        		try {
+        			Connection conn = DBConnection.getConnection();
+        			
+        			//System.out.println("Happened");
+        			
+        			String command = "DELETE FROM users WHERE userID = ?";
+        			PreparedStatement deleteQuery = conn.prepareStatement(command);
+        			
+        			deleteQuery.setInt(1, userID);
+        			
+        			int userFound = deleteQuery.executeUpdate();
+        			deleteQuery.close();
+        			
+        			System.out.println("userFound: " + userFound);
+        			
+        			if(userFound > 0) {
+        				conn.commit();
+        				System.out.println("CANADA");
+        				jsonResponse.addProperty("status", "success");
+        				jsonResponse.addProperty("message", "Account has been deleted");
+        				
+        				session.invalidate();
+        			} else {
+        				System.out.println("ERROR");
+        				conn.rollback();
+        				jsonResponse.addProperty("status", "error");
+        				jsonResponse.addProperty("message", "Failed to delete account");
+        			}
+        		}
+        		
+        		catch(SQLException e) {
+        			jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "Database error: " + e.getMessage());
+                    e.printStackTrace();
+        		}
+        		
+        		catch(ClassNotFoundException e) {
+        			jsonResponse.addProperty("status", "error");
+                    jsonResponse.addProperty("message", "Class not found: " + e.getMessage());
+                    e.printStackTrace();
+        		}
+        	}
+        	
         } else if ("removeCourse".equals(action)) {
             HttpSession session = request.getSession(false);
             int userID = (Integer) session.getAttribute("userID");
