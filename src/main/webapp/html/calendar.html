@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar API Integration</title>
+    <!-- Load calendar.js first so gapiLoaded and gisLoaded are defined -->
+    <script src="calendar.js" defer></script>
+    <!-- GIS Library: Add onload to trigger gisLoaded() -->
+    <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
+    <!-- Google API Client: Calls gapiLoaded() when finished -->
+    <script src="https://apis.google.com/js/api.js" async defer onload="gapiLoaded()"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Google Calendar API Integration</h1>
+
+    <button id="authorize-button" disabled>Authorize Google Calendar</button>
+    <button id="signout-button" style="display: none;">Sign Out</button>
+
+    <div id="content" style="display: none;">
+        <h2>Upcoming Events</h2>
+        <ul id="events-list"></ul>
+        <h2>Add a New Event</h2>
+        <form id="event-form">
+            <label for="summary">Event Summary:</label><br>
+            <input type="text" id="summary" name="summary" required><br>
+            <label for="start-time">Start Time:</label><br>
+            <input type="datetime-local" id="start-time" name="start-time" required><br>
+            <label for="end-time">End Time:</label><br>
+            <input type="datetime-local" id="end-time" name="end-time" required><br><br>
+            <button type="submit">Create Event</button>
+        </form>
+    </div>
+</body>
+</html>
