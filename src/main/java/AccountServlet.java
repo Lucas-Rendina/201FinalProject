@@ -129,7 +129,7 @@ public class AccountServlet extends HttpServlet {
         			
         			if(userFound > 0) {
         				conn.commit();
-        				System.out.println("CANADA");
+        				//System.out.println("CANADA");
         				jsonResponse.addProperty("status", "success");
         				jsonResponse.addProperty("message", "Account has been deleted");
         				
@@ -204,6 +204,6 @@ public class AccountServlet extends HttpServlet {
 			}
         }
         
-        out.print(new Gson().toJson(jsonResponse));
-    }
+		out.print(new Gson().toJson(jsonResponse));
+	}
 }
