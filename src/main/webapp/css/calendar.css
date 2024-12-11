@@ -1,0 +1,120 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffc72c; /* USC Gold */
+    color: #990000; /* USC Cardinal */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    text-align: center;
+}
+
+/* Header Styling */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #990000; /* USC Cardinal */
+}
+
+/* Button Styling */
+button {
+    background-color: #990000; /* USC Cardinal */
+    color: #fff; /* White text */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #731d1d; /* Darker USC Cardinal */
+}
+
+button:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
+#signout-button {
+    background-color: #731d1d;
+}
+
+#authorize-button {
+    margin-bottom: 20px;
+}
+
+/* Authentication Section */
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+}
+
+/* Form Styling */
+form {
+    background-color: #fff; /* White form background */
+    border: 1px solid #990000; /* USC Cardinal border */
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 10px;
+}
+
+form label {
+    font-weight: bold;
+    color: #990000; /* USC Cardinal */
+    margin-bottom: 5px;
+}
+
+form input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form button {
+    align-self: center;
+    width: 100%;
+    font-size: 1rem;
+}
+
+/* List Styling */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+        text-align: center;
+    }
+
+    form {
+        width: 100%;
+    }
+}
