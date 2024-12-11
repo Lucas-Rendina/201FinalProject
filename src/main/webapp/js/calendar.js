@@ -56,6 +56,8 @@ function handleTokenResponse(response) {
     }
     console.log("Access token received:", response.access_token);
     content.style.display = "block";
+	authorizeButton.style.display = "none"; 
+
     listUpcomingEvents();
 }
 
