@@ -128,7 +128,6 @@ header {
 	font-size: 0.85rem;
 }
 
-/* Toast Styles */
 #toastContainer {
 	position: fixed;
 	top: 20px;

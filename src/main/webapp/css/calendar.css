@@ -1,8 +1,7 @@
-/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffc72c; /* USC Gold */
-    color: #990000; /* USC Cardinal */
+    background-color: #ffc72c;
+    color: #990000;
     margin: 0;
     padding: 0;
     display: flex;
@@ -13,17 +12,16 @@ body {
     text-align: center;
 }
 
-/* Header Styling */
+
 h1 {
     font-size: 2rem;
     margin-bottom: 20px;
-    color: #990000; /* USC Cardinal */
+    color: #990000;
 }
 
-/* Button Styling */
 button {
-    background-color: #990000; /* USC Cardinal */
-    color: #fff; /* White text */
+    background-color: #990000;
+    color: #fff;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
@@ -33,7 +31,7 @@ button {
 }
 
 button:hover {
-    background-color: #731d1d; /* Darker USC Cardinal */
+    background-color: #731d1d;
 }
 
 button:disabled {
@@ -49,7 +47,7 @@ button:disabled {
     margin-bottom: 20px;
 }
 
-/* Authentication Section */
+
 #content {
     display: flex;
     flex-direction: column;
@@ -62,8 +60,8 @@ button:disabled {
 
 /* Form Styling */
 form {
-    background-color: #fff; /* White form background */
-    border: 1px solid #990000; /* USC Cardinal border */
+    background-color: #fff;
+    border: 1px solid #990000;
     border-radius: 10px;
     padding: 20px;
     width: 100%;
@@ -76,7 +74,7 @@ form {
 
 form label {
     font-weight: bold;
-    color: #990000; /* USC Cardinal */
+    color: #990000;
     margin-bottom: 5px;
 }
 
@@ -96,7 +94,6 @@ form button {
     font-size: 1rem;
 }
 
-/* List Styling */
 ul {
     list-style: none;
     padding: 0;
@@ -107,7 +104,6 @@ ul li {
     border-bottom: 1px solid #ddd;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     body {
         padding: 20px;
