@@ -221,7 +221,7 @@ function createCalendarStructure() {
 	
 
 
-	for (let hour = 8; hour <= 17; hour++) {
+	for (let hour = 8; hour <= 21; hour++) {
 
 		for (let minute of [0, 30]) {
 
@@ -235,7 +235,33 @@ function createCalendarStructure() {
 
 			timeCell.className = 'time-cell';
 
-			timeCell.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+			
+
+			let displayHour = hour;
+
+			let period = 'am';
+
+			if (hour >= 12) {
+
+				period = 'pm';
+
+				if (hour > 12) {
+
+					displayHour = hour - 12;
+
+				}
+
+			}
+
+			if (hour === 0) {
+
+				displayHour = 12;
+
+			}
+
+			
+
+			timeCell.textContent = `${displayHour}:${minute.toString().padStart(2, '0')}${period}`;
 
 			timeRow.appendChild(timeCell);
 

@@ -12,7 +12,7 @@ public class DBConnection {
 	//db.properties wasn't working for me, we can just each add our own shit here
 	private static String URL= "jdbc:mysql://localhost:3306/coursemarket";
 	private static String USER = "root";
-	private static String PASSWORD= "root";
+	private static String PASSWORD= "MeursaulT8843$&@";
 
 //	static {
 //		// Load properties when the class is first loaded
