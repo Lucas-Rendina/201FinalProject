@@ -1,4 +1,3 @@
-/* Global Container */
 .account-container {
 	max-width: 1200px;
 	margin: 0 auto;
@@ -108,7 +107,6 @@
 	font-size: 0.95rem;
 }
 
-/* Remove Course Button */
 .remove-course-btn {
 	background-color: #dc3545;
 	color: white;
